@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>كلينك شانزليزيه | نظام إدارة أقساط الأجهزة الطبية</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background: linear-gradient(145deg, #eef2f7 0%, #d9e2ec 100%);
+    font-family: 'Segoe UI', 'Tajawal', 'Cairo', system-ui, sans-serif;
+    padding: 1.5rem 1rem 3rem;
+    min-height: 100vh;
+    color: #1e2f3e;
+}
+
+.wrapper { max-width: 1400px; margin: 0 auto; }
+
+/* Header */
+.clinic-header {
+    background: linear-gradient(135deg, #d32f2f, #1b5e20, #0d47a1);
+    padding: 1rem 1.8rem;
+    border-radius: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    color: white;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.3);
+}
+.logo-area { display: flex; align-items: center; gap: 15px; }
+.logo-area img {
+    height: 65px; width: auto; border-radius: 18px;
+    background: white; padding: 5px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.clinic-title { flex: 1; text-align: center; }
+.clinic-title h2 { font-size: 1.7rem; font-weight: 800; }
+.clinic-title p { font-size: 0.85rem; opacity: 0.9; margin-top: 2px; }
+.year-badge {
+    background: rgba(255,255,240,0.2);
+    backdrop-filter: blur(4px);
+    padding: 0.5rem 1rem;
+    border-radius: 40px;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    background: white;
+    padding: 0.5rem;
+    border-radius: 24px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    margin-bottom: 1.2rem;
+    overflow-x: auto;
+}
+.tab {
+    border: none;
+    background: transparent;
+    padding: 12px 20px;
+    border-radius: 18px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #4a6b7f;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.2s;
+    white-space: nowrap;
+}
+.tab:hover { background: #f0f4fa; color: #0d47a1; }
+.tab.active {
+    background: linear-gradient(95deg, #0d47a1, #1976d2);
+    color: white;
+    box-shadow: 0 4px 12px rgba(13,71,161,0.3);
+}
+
+/* Cards */
+.card {
+    background: white;
+    border-radius: 28px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 24px -8px rgba(0,0,0,0.1);
+    margin-bottom: 1.2rem;
+}
+.card h3 {
+    font-size: 1.15rem;
+    color: #0b3b4f;
+    margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 2px solid #eef2f7;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Tab content */
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Summary cards grid */
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+}
+.summary-card {
+    background: white;
+    border-radius: 24px;
+    padding: 1.2rem;
+    box-shadow: 0 6px 20px -6px rgba(0,0,0,0.1);
+    border-right: 6px solid #1976d2;
+}
+.summary-card.green { border-right-color: #1b5e20; }
+.summary-card.red { border-right-color: #d32f2f; }
+.summary-card.gold { border-right-color: #b8860b; }
+.summary-card .label {
+    font-size: 0.85rem; color: #5d7a8c; font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+}
+.summary-card .value {
+    font-size: 1.8rem; font-weight: 800; color: #0b3b4f;
+    margin-top: 6px; line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+}
+.summary-card .sub {
+    font-size: 0.75rem; color: #5d7a8c; margin-top: 4px;
+}
+
+/* Forms */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+}
+.form-field label {
+    display: block; font-weight: 700; margin-bottom: 6px;
+    color: #0b3b4f; font-size: 0.85rem;
+}
+.form-field input, .form-field select, .form-field textarea {
+    width: 100%;
+    padding: 11px 14px;
+    font-size: 0.95rem;
+    border: 2px solid #cbdbe0;
+    border-radius: 14px;
+    font-family: inherit;
+    background: white;
+    transition: 0.2s;
+    font-variant-numeric: tabular-nums;
+}
+.form-field input:focus, .form-field select:focus, .form-field textarea:focus {
+    border-color: #2196F3;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(33,150,243,0.15);
+}
+.form-field.full { grid-column: 1 / -1; }
+.form-actions {
+    display: flex; gap: 0.8rem; margin-top: 1.2rem;
+    flex-wrap: wrap;
+}
+
+/* Buttons */
+.btn {
+    border: none;
+    padding: 11px 22px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: inherit;
+    text-decoration: none;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn-primary { background: linear-gradient(95deg, #0d47a1, #1976d2); color: white; }
+.btn-success { background: linear-gradient(95deg, #1b5e20, #2e7d32); color: white; }
+.btn-danger { background: linear-gradient(95deg, #d32f2f, #b71c1c); color: white; }
+.btn-secondary { background: #eef2f7; color: #0b3b4f; }
+.btn-small { padding: 6px 12px; font-size: 0.8rem; border-radius: 10px; }
+
+/* Tables */
+.table-wrap {
+    overflow-x: auto;
+    border-radius: 16px;
+    border: 1px solid #e6eef5;
+}
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    font-size: 0.85rem;
+}
+.data-table th {
+    background: #1e3a5f;
+    color: white;
+    padding: 10px 8px;
+    font-weight: 600;
+    text-align: center;
+    font-size: 0.8rem;
+}
+.data-table td {
+    padding: 9px 8px;
+    border-bottom: 1px solid #eef2f7;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tbody tr:hover { background: #f8fbff; }
+.data-table tr.paid { background: #f0f9f0; }
+.data-table tr.overdue { background: #fff0f0; }
+.data-table tr.total-row { background: #eef2f7; font-weight: 800; }
+
+/* Status badges */
+.badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+.badge-paid { background: #d4edda; color: #155724; }
+.badge-pending { background: #fff3cd; color: #856404; }
+.badge-overdue { background: #f8d7da; color: #721c24; }
+
+/* Device cards */
+.device-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1rem;
+}
+.device-card {
+    background: white;
+    border-radius: 22px;
+    padding: 1.2rem;
+    box-shadow: 0 6px 20px -6px rgba(0,0,0,0.1);
+    border-top: 5px solid #1976d2;
+    transition: 0.2s;
+}
+.device-card:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -6px rgba(0,0,0,0.15); }
+.device-card.overdue { border-top-color: #d32f2f; }
+.device-card.complete { border-top-color: #1b5e20; }
+.device-card h4 {
+    color: #0b3b4f; font-size: 1.05rem; margin-bottom: 4px;
+    display: flex; align-items: center; gap: 6px;
+}
+.device-card .supplier { font-size: 0.8rem; color: #5d7a8c; margin-bottom: 10px; }
+.device-card .info-row {
+    display: flex; justify-content: space-between;
+    font-size: 0.85rem; padding: 4px 0;
+    border-bottom: 1px dashed #eef2f7;
+}
+.device-card .info-row:last-child { border-bottom: none; }
+.device-card .info-row span:first-child { color: #5d7a8c; }
+.device-card .info-row span:last-child { font-weight: 700; color: #0b3b4f; font-variant-numeric: tabular-nums; }
+.progress-bar {
+    height: 8px;
+    background: #eef2f7;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 10px 0 6px;
+}
+.progress-bar > div {
+    height: 100%;
+    background: linear-gradient(90deg, #1b5e20, #2e7d32);
+    transition: width 0.4s;
+}
+.device-card .progress-info {
+    font-size: 0.75rem; color: #5d7a8c;
+    display: flex; justify-content: space-between;
+}
+.device-card .card-actions {
+    display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap;
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center; padding: 3rem 1rem; color: #7a93a5;
+}
+.empty-state i { font-size: 3rem; margin-bottom: 1rem; opacity: 0.4; }
+.empty-state p { font-size: 0.95rem; }
+
+/* Device search list */
+.search-results {
+    max-height: 320px;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+.device-search-item {
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: #f8fafd;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: 0.15s;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px;
+    border: 2px solid transparent;
+}
+.device-search-item:hover { background: #e8f2ff; border-color: #1976d2; }
+.device-search-item .name { font-weight: 700; color: #0b3b4f; font-size: 0.9rem; }
+.device-search-item .meta { font-size: 0.75rem; color: #5d7a8c; }
+
+/* Modal */
+.modal-overlay {
+    display: none;
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 3000;
+    align-items: center; justify-content: center;
+    padding: 1rem;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+    background: white;
+    border-radius: 24px;
+    padding: 1.5rem;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 20px 60px -10px rgba(0,0,0,0.4);
+}
+.modal h3 {
+    color: #0b3b4f; font-size: 1.1rem; margin-bottom: 0.8rem;
+    padding-bottom: 0.6rem; border-bottom: 2px solid #eef2f7;
+}
+.modal .info { font-size: 0.85rem; color: #4a6b7f; margin-bottom: 1rem; line-height: 1.6; }
+.modal label { display: block; font-weight: 700; margin-bottom: 6px; font-size: 0.85rem; color: #0b3b4f; }
+.modal input {
+    width: 100%; padding: 10px 14px; font-size: 0.95rem;
+    border: 2px solid #cbdbe0; border-radius: 12px;
+    font-family: inherit; margin-bottom: 1rem;
+}
+.modal-buttons { display: flex; gap: 0.6rem; justify-content: flex-end; }
+
+/* Toast */
+.toast {
+    position: fixed; bottom: 30px; left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 24px;
+    border-radius: 40px;
+    font-weight: 700;
+    z-index: 4000;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    font-size: 0.9rem;
+    color: white;
+    animation: slideUp 0.3s ease;
+    max-width: 90vw;
+    text-align: center;
+}
+.toast.success { background: #1b5e20; }
+.toast.error { background: #d32f2f; }
+.toast.info { background: #0d47a1; }
+@keyframes slideUp { from { bottom: 0; opacity: 0; } to { bottom: 30px; opacity: 1; } }
+
+/* Signature card */
+.signature-card {
+    position: fixed;
+    bottom: 20px; left: 20px;
+    background: #f9f9fc;
+    padding: 6px 12px;
+    border-radius: 32px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    font-size: 0.65rem;
+    z-index: 1000;
+    text-decoration: none;
+    color: #1f2f3a;
+    display: inline-flex;
+    flex-direction: column;
+    line-height: 1.3;
+    text-align: center;
+    border: 1px solid rgba(0,0,0,0.05);
+    transition: 0.2s;
+}
+.signature-card:hover { transform: scale(1.02); box-shadow: 0 4px 12px rgba(0,0,0,0.15); background: #fff; }
+.signature-card .name { font-size: 0.7rem; font-weight: 700; }
+.signature-card .title { font-size: 0.55rem; opacity: 0.8; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    body { padding: 1rem 0.6rem 3rem; }
+    .clinic-header { padding: 0.9rem 1rem; border-radius: 24px; }
+    .clinic-title h2 { font-size: 1.3rem; }
+    .logo-area img { height: 50px; }
+    .summary-card .value { font-size: 1.4rem; }
+    .tab { padding: 9px 14px; font-size: 0.8rem; }
+    .card { padding: 1rem; border-radius: 20px; }
+    .data-table { font-size: 0.72rem; }
+    .data-table th, .data-table td { padding: 6px 4px; }
+    .signature-card { position: relative; bottom: auto; left: auto; margin: 20px auto 0; display: inline-flex; }
+}
+
+/* PDF helper */
+.pdf-mode .card, .pdf-mode .device-card { box-shadow: none; border: 1px solid #e6eef5; }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+    <div class="clinic-header">
+        <div class="logo-area">
+            <img src="https://i.postimg.cc/ZK4kBD7D/klynk.jpg" alt="كلينك شانزليزيه" onerror="this.src='https://placehold.co/80x80?text=KLYNK'">
+        </div>
+        <div class="clinic-title">
+            <h2>كلينك شانزليزيه</h2>
+            <p>نظام إدارة أقساط الأجهزة الطبية</p>
+        </div>
+        <div class="year-badge">
+            <i class="fas fa-calendar-alt"></i> <span id="currentYear"></span>
+        </div>
+    </div>
+
+    <nav class="tabs" id="mainTabs">
+        <button class="tab active" data-tab="dashboard"><i class="fas fa-home"></i> لوحة التحكم</button>
+        <button class="tab" data-tab="add"><i class="fas fa-plus-circle"></i> إضافة جهاز</button>
+        <button class="tab" data-tab="devices"><i class="fas fa-list"></i> قائمة الأجهزة</button>
+        <button class="tab" data-tab="reports"><i class="fas fa-chart-bar"></i> التقارير الدورية</button>
+        <button class="tab" data-tab="statement"><i class="fas fa-file-invoice"></i> كشف حساب جهاز</button>
+    </nav>
+
+    <!-- ===== DASHBOARD ===== -->
+    <section id="tab-dashboard" class="tab-content active">
+        <div class="summary-grid" id="dashboardSummary"></div>
+        <div class="card">
+            <h3><i class="fas fa-bell"></i> الدفعات القادمة (خلال 30 يوم)</h3>
+            <div id="upcomingPayments"></div>
+        </div>
+        <div class="card">
+            <h3><i class="fas fa-exclamation-triangle" style="color:#d32f2f;"></i> الدفعات المتأخرة</h3>
+            <div id="overduePayments"></div>
+        </div>
+        <div class="card">
+            <h3><i class="fas fa-database"></i> إدارة البيانات</h3>
+            <div class="form-actions">
+                <button class="btn btn-secondary" onclick="exportDataJSON()"><i class="fas fa-download"></i> تصدير نسخة احتياطية (JSON)</button>
+                <label class="btn btn-secondary" style="cursor:pointer;">
+                    <i class="fas fa-upload"></i> استيراد نسخة احتياطية
+                    <input type="file" accept=".json" onchange="importDataJSON(event)" style="display:none;">
+                </label>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ADD DEVICE ===== -->
+    <section id="tab-add" class="tab-content">
+        <div class="card">
+            <h3><i class="fas fa-plus-circle"></i> تسجيل جهاز جديد بنظام الأقساط</h3>
+            <form id="addDeviceForm" onsubmit="handleAddDevice(event)">
+                <div class="form-grid">
+                    <div class="form-field full">
+                        <label for="deviceName"><i class="fas fa-microscope"></i> اسم الجهاز *</label>
+                        <input type="text" id="deviceName" required placeholder="مثال: جهاز مراقبة المريض - Patient Monitor">
+                    </div>
+                    <div class="form-field">
+                        <label for="supplier"><i class="fas fa-building"></i> المورد / الشركة</label>
+                        <input type="text" id="supplier" placeholder="اسم الشركة المورّدة">
+                    </div>
+                    <div class="form-field">
+                        <label for="contractNumber"><i class="fas fa-hashtag"></i> رقم العقد</label>
+                        <input type="text" id="contractNumber" placeholder="DEV-2026-001">
+                    </div>
+                    <div class="form-field">
+                        <label for="contractDate"><i class="fas fa-calendar-plus"></i> تاريخ العقد *</label>
+                        <input type="date" id="contractDate" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="totalPrice"><i class="fas fa-coins"></i> إجمالي قيمة الجهاز (د.ك) *</label>
+                        <input type="number" id="totalPrice" step="any" required min="0" placeholder="0.000">
+                    </div>
+                    <div class="form-field">
+                        <label for="downPayment"><i class="fas fa-hand-holding-usd"></i> الدفعة المقدمة (د.ك)</label>
+                        <input type="number" id="downPayment" step="any" min="0" placeholder="0.000" value="0">
+                    </div>
+                    <div class="form-field">
+                        <label for="installmentsCount"><i class="fas fa-layer-group"></i> عدد الأقساط *</label>
+                        <input type="number" id="installmentsCount" step="1" min="1" required placeholder="12 / 20 / 30">
+                    </div>
+                    <div class="form-field">
+                        <label for="firstInstallmentDate"><i class="fas fa-calendar-alt"></i> تاريخ أول قسط *</label>
+                        <input type="date" id="firstInstallmentDate" required>
+                    </div>
+                    <div class="form-field full">
+                        <label for="notes"><i class="fas fa-sticky-note"></i> ملاحظات</label>
+                        <textarea id="notes" rows="2" placeholder="أي تفاصيل إضافية (موديل، مواصفات، ضمان...)"></textarea>
+                    </div>
+                </div>
+
+                <div id="calcPreview" style="margin-top:1.2rem; padding:1rem; background:#f0f8ff; border-radius:16px; display:none;">
+                    <h4 style="color:#0d47a1; margin-bottom:8px; font-size:0.95rem;"><i class="fas fa-calculator"></i> معاينة الحساب</h4>
+                    <div id="calcPreviewContent" style="font-size:0.9rem; line-height:1.8;"></div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ الجهاز</button>
+                    <button type="button" class="btn btn-secondary" onclick="resetAddForm()"><i class="fas fa-redo"></i> تفريغ الحقول</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- ===== DEVICES LIST ===== -->
+    <section id="tab-devices" class="tab-content">
+        <div class="card">
+            <h3><i class="fas fa-list"></i> الأجهزة المسجّلة</h3>
+            <div style="margin-bottom:1rem;">
+                <input type="text" id="deviceFilter" placeholder="🔍 ابحث باسم الجهاز أو رقم العقد أو المورد..." style="width:100%; padding:12px 16px; border:2px solid #cbdbe0; border-radius:14px; font-family:inherit; font-size:0.95rem;" oninput="renderDevices()">
+            </div>
+            <div class="device-grid" id="devicesGrid"></div>
+        </div>
+    </section>
+
+    <!-- ===== REPORTS ===== -->
+    <section id="tab-reports" class="tab-content">
+        <div class="card">
+            <h3><i class="fas fa-chart-bar"></i> التقرير الدوري</h3>
+            <div class="form-grid" style="margin-bottom:1rem;">
+                <div class="form-field">
+                    <label for="reportFrom"><i class="fas fa-calendar-alt"></i> من تاريخ</label>
+                    <input type="date" id="reportFrom">
+                </div>
+                <div class="form-field">
+                    <label for="reportTo"><i class="fas fa-calendar-alt"></i> إلى تاريخ</label>
+                    <input type="date" id="reportTo">
+                </div>
+                <div class="form-field" style="align-self:end;">
+                    <button class="btn btn-primary" onclick="generateReport()" style="width:100%;"><i class="fas fa-search"></i> عرض التقرير</button>
+                </div>
+            </div>
+        </div>
+        <div id="reportOutput"></div>
+    </section>
+
+    <!-- ===== STATEMENT ===== -->
+    <section id="tab-statement" class="tab-content">
+        <div class="card">
+            <h3><i class="fas fa-file-invoice"></i> كشف حساب جهاز</h3>
+            <div class="form-grid">
+                <div class="form-field full">
+                    <label for="statementSearch"><i class="fas fa-search"></i> ابحث باسم الجهاز</label>
+                    <input type="text" id="statementSearch" placeholder="اكتب اسم الجهاز للبحث..." oninput="renderStatementSearch()">
+                </div>
+            </div>
+            <div id="statementSearchResults" class="search-results"></div>
+        </div>
+        <div id="statementOutput"></div>
+    </section>
+
+</div>
+
+<!-- Payment Modal -->
+<div id="paymentModal" class="modal-overlay">
+    <div class="modal">
+        <h3><i class="fas fa-money-bill-wave"></i> تسجيل دفعة</h3>
+        <div class="info" id="modalInfo"></div>
+        <label for="paymentDateInput">تاريخ الدفع:</label>
+        <input type="date" id="paymentDateInput">
+        <div class="modal-buttons">
+            <button class="btn btn-secondary" onclick="closePaymentModal()">إلغاء</button>
+            <button class="btn btn-success" onclick="confirmPayment()">تأكيد الدفع</button>
+        </div>
+    </div>
+</div>
+
+<a href="https://yasser-q8.github.io/myprofile/#" class="signature-card" target="_blank" rel="noopener noreferrer">
+    <div class="name">Yasser Elkhateeb</div>
+    <div class="title">مطور البرنامج 67011143</div>
+</a>
+
+<script>
+/* ============================================================
+   DATA LAYER
+   ============================================================ */
+const STORAGE_KEY = 'champs_elysees_devices_v1';
+
+const Data = {
+    load() {
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) return { devices: [] };
+            const parsed = JSON.parse(raw);
+            if (!parsed.devices) parsed.devices = [];
+            return parsed;
+        } catch (e) { return { devices: [] }; }
+    },
+    save(data) {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            return true;
+        } catch (e) {
+            showToast('تعذر حفظ البيانات - قد تكون ذاكرة المتصفح ممتلئة', 'error');
+            return false;
+        }
+    }
+};
+
+function generateId() {
+    return 'DEV-' + Date.now().toString(36) + '-' + Math.random().toString(36).substr(2, 6);
+}
+
+function formatMoney(n) {
+    const num = Number(n) || 0;
+    return num.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+}
+
+function formatDate(dateObj) {
+    if (!dateObj) return '';
+    const d = (dateObj instanceof Date) ? dateObj : new Date(dateObj);
+    if (isNaN(d.getTime())) return '';
+    return `${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`;
+}
+
+function formatDateInput(dateObj) {
+    if (!dateObj) return '';
+    const d = (dateObj instanceof Date) ? dateObj : new Date(dateObj);
+    if (isNaN(d.getTime())) return '';
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+/* ============================================================
+   SCHEDULE COMPUTATION
+   ============================================================ */
+function computeSchedule(device) {
+    if (!device.installmentsCount || device.installmentsCount <= 0) return [];
+    const remaining = Number(device.totalPrice) - Number(device.downPayment || 0);
+    if (remaining <= 0) return [];
+    const firstDate = new Date(device.firstInstallmentDate);
+    if (isNaN(firstDate.getTime())) return [];
+    const monthly = remaining / device.installmentsCount;
+    const schedule = [];
+    let sumFirst = 0;
+    for (let i = 1; i <= device.installmentsCount - 1; i++) {
+        const amt = Math.floor(monthly * 1000) / 1000;
+        sumFirst += amt;
+        const d = new Date(firstDate);
+        d.setMonth(d.getMonth() + (i - 1));
+        schedule.push({ number: i, dueDate: d, amount: amt });
+    }
+    const lastAmt = Math.round((remaining - sumFirst) * 1000) / 1000;
+    const dLast = new Date(firstDate);
+    dLast.setMonth(dLast.getMonth() + (device.installmentsCount - 1));
+    schedule.push({ number: device.installmentsCount, dueDate: dLast, amount: lastAmt });
+    return schedule;
+}
+
+function getDeviceStatus(device) {
+    const schedule = computeSchedule(device);
+    const payments = device.payments || {};
+    const today = new Date(); today.setHours(0,0,0,0);
+    let paidAmount = 0, paidCount = 0, overdueCount = 0, overdueAmount = 0;
+    let nextDue = null;
+    schedule.forEach(inst => {
+        const isPaid = payments[inst.number] !== undefined && payments[inst.number] !== '';
+        if (isPaid) {
+            paidAmount += inst.amount; paidCount++;
+        } else {
+            const due = new Date(inst.dueDate); due.setHours(0,0,0,0);
+            if (due < today) { overdueCount++; overdueAmount += inst.amount; }
+            else if (!nextDue || due < nextDue.dueDate) nextDue = inst;
+        }
+    });
+    const totalPaid = Number(device.downPayment || 0) + paidAmount;
+    const remaining = Number(device.totalPrice) - totalPaid;
+    return {
+        schedule, payments, paidAmount, paidCount, overdueCount, overdueAmount,
+        totalPaid, remaining, totalInstallments: schedule.length,
+        remainingCount: schedule.length - paidCount,
+        progress: Number(device.totalPrice) > 0 ? (totalPaid / Number(device.totalPrice) * 100) : 0,
+        nextDue
+    };
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+function showToast(message, type = 'info') {
+    const existing = document.querySelector('.toast');
+    if (existing) existing.remove();
+    const t = document.createElement('div');
+    t.className = 'toast ' + type;
+    t.innerText = message;
+    document.body.appendChild(t);
+    setTimeout(() => { if (t) t.remove(); }, 3200);
+}
+
+/* ============================================================
+   TAB NAVIGATION
+   ============================================================ */
+document.getElementById('mainTabs').addEventListener('click', e => {
+    const btn = e.target.closest('.tab');
+    if (!btn) return;
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t === btn));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === 'tab-' + tab));
+    if (tab === 'dashboard') renderDashboard();
+    if (tab === 'devices') renderDevices();
+    if (tab === 'statement') { renderStatementSearch(); }
+});
+
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+function renderDashboard() {
+    const data = Data.load();
+    let totalValue = 0, totalPaid = 0, totalRemaining = 0;
+    let totalDevices = data.devices.length;
+    let completedDevices = 0;
+    let overdueCount = 0;
+    const today = new Date(); today.setHours(0,0,0,0);
+    const in30 = new Date(today); in30.setDate(in30.getDate() + 30);
+    const upcomingList = [];
+    const overdueList = [];
+
+    data.devices.forEach(d => {
+        const status = getDeviceStatus(d);
+        totalValue += Number(d.totalPrice);
+        totalPaid += status.totalPaid;
+        totalRemaining += status.remaining;
+        if (status.remaining <= 0.001) completedDevices++;
+        status.schedule.forEach(inst => {
+            const isPaid = status.payments[inst.number] !== undefined && status.payments[inst.number] !== '';
+            if (isPaid) return;
+            const due = new Date(inst.dueDate); due.setHours(0,0,0,0);
+            if (due < today) {
+                overdueList.push({ device: d, inst });
+                overdueCount++;
+            } else if (due <= in30) {
+                upcomingList.push({ device: d, inst });
+            }
+        });
+    });
+
+    document.getElementById('dashboardSummary').innerHTML = `
+        <div class="summary-card">
+            <div class="label"><i class="fas fa-microscope"></i> عدد الأجهزة</div>
+            <div class="value">${totalDevices}</div>
+            <div class="sub">مكتملة السداد: ${completedDevices}</div>
+        </div>
+        <div class="summary-card gold">
+            <div class="label"><i class="fas fa-coins"></i> إجمالي قيمة الأجهزة</div>
+            <div class="value">${formatMoney(totalValue)}</div>
+            <div class="sub">د.ك</div>
+        </div>
+        <div class="summary-card green">
+            <div class="label"><i class="fas fa-check-circle"></i> إجمالي المسدّد</div>
+            <div class="value">${formatMoney(totalPaid)}</div>
+            <div class="sub">د.ك</div>
+        </div>
+        <div class="summary-card red">
+            <div class="label"><i class="fas fa-hourglass-half"></i> المتبقي</div>
+            <div class="value">${formatMoney(totalRemaining)}</div>
+            <div class="sub">د.ك ${overdueCount > 0 ? '· متأخر: ' + overdueCount : ''}</div>
+        </div>
+    `;
+
+    const upcomingContainer = document.getElementById('upcomingPayments');
+    if (upcomingList.length === 0) {
+        upcomingContainer.innerHTML = `<div class="empty-state"><i class="fas fa-check-circle"></i><p>لا توجد دفعات قادمة خلال 30 يوم</p></div>`;
+    } else {
+        upcomingContainer.innerHTML = renderPaymentsTable(upcomingList);
+    }
+
+    const overdueContainer = document.getElementById('overduePayments');
+    if (overdueList.length === 0) {
+        overdueContainer.innerHTML = `<div class="empty-state"><i class="fas fa-check-circle"></i><p>لا توجد دفعات متأخرة 👏</p></div>`;
+    } else {
+        overdueContainer.innerHTML = renderPaymentsTable(overdueList);
+    }
+}
+
+function renderPaymentsTable(list) {
+    let html = `<div class="table-wrap"><table class="data-table">
+        <thead><tr>
+            <th>الجهاز</th><th>رقم القسط</th><th>تاريخ الاستحقاق</th><th>القيمة (د.ك)</th><th>إجراء</th>
+        </tr></thead><tbody>`;
+    list.sort((a,b) => new Date(a.inst.dueDate) - new Date(b.inst.dueDate));
+    list.forEach(item => {
+        const overdue = new Date(item.inst.dueDate) < new Date();
+        html += `<tr class="${overdue?'overdue':''}">
+            <td>${escapeHtml(item.device.deviceName)}</td>
+            <td>${item.inst.number}</td>
+            <td>${formatDate(item.inst.dueDate)}</td>
+            <td>${formatMoney(item.inst.amount)}</td>
+            <td><button class="btn btn-success btn-small" onclick="openPaymentModal('${item.device.id}', ${item.inst.number})"><i class="fas fa-check"></i> دفع</button></td>
+        </tr>`;
+    });
+    html += `</tbody></table></div>`;
+    return html;
+}
+
+/* ============================================================
+   ADD DEVICE
+   ============================================================ */
+function initAddFormDefaults() {
+    const today = new Date();
+    document.getElementById('contractDate').value = formatDateInput(today);
+    const nextMonth = new Date(today.getFullYear(), today.getMonth()+1, 1);
+    document.getElementById('firstInstallmentDate').value = formatDateInput(nextMonth);
+}
+
+function resetAddForm() {
+    document.getElementById('addDeviceForm').reset();
+    initAddFormDefaults();
+    document.getElementById('calcPreview').style.display = 'none';
+}
+
+['totalPrice','downPayment','installmentsCount'].forEach(id => {
+    document.getElementById(id)?.addEventListener('input', updateCalcPreview);
+});
+
+function updateCalcPreview() {
+    const total = parseFloat(document.getElementById('totalPrice').value) || 0;
+    const down = parseFloat(document.getElementById('downPayment').value) || 0;
+    const count = parseInt(document.getElementById('installmentsCount').value) || 0;
+    const preview = document.getElementById('calcPreview');
+    const content = document.getElementById('calcPreviewContent');
+    if (total <= 0 || count <= 0) { preview.style.display = 'none'; return; }
+    const remaining = total - down;
+    if (remaining < 0) {
+        content.innerHTML = `<span style="color:#d32f2f;">⚠️ الدفعة المقدمة أكبر من إجمالي القيمة</span>`;
+        preview.style.display = 'block';
+        return;
+    }
+    const monthly = remaining / count;
+    content.innerHTML = `
+        <div>إجمالي القيمة: <strong>${formatMoney(total)} د.ك</strong></div>
+        <div>الدفعة المقدمة: <strong>${formatMoney(down)} د.ك</strong></div>
+        <div>المتبقي على الأقساط: <strong>${formatMoney(remaining)} د.ك</strong></div>
+        <div>القسط الشهري التقريبي: <strong style="color:#0d47a1; font-size:1.05rem;">${formatMoney(monthly)} د.ك</strong> × ${count} قسط</div>
+    `;
+    preview.style.display = 'block';
+}
+
+function handleAddDevice(e) {
+    e.preventDefault();
+    const device = {
+        id: generateId(),
+        deviceName: document.getElementById('deviceName').value.trim(),
+        supplier: document.getElementById('supplier').value.trim(),
+        contractNumber: document.getElementById('contractNumber').value.trim(),
+        contractDate: document.getElementById('contractDate').value,
+        totalPrice: parseFloat(document.getElementById('totalPrice').value),
+        downPayment: parseFloat(document.getElementById('downPayment').value) || 0,
+        installmentsCount: parseInt(document.getElementById('installmentsCount').value),
+        firstInstallmentDate: document.getElementById('firstInstallmentDate').value,
+        notes: document.getElementById('notes').value.trim(),
+        payments: {},
+        createdAt: new Date().toISOString()
+    };
+    if (!device.deviceName || !device.totalPrice || !device.installmentsCount || !device.firstInstallmentDate) {
+        showToast('يرجى ملء جميع الحقول المطلوبة', 'error');
+        return;
+    }
+    if (device.downPayment > device.totalPrice) {
+        showToast('الدفعة المقدمة أكبر من إجمالي القيمة', 'error');
+        return;
+    }
+    const data = Data.load();
+    data.devices.push(device);
+    if (Data.save(data)) {
+        showToast('تم إضافة الجهاز بنجاح ✅', 'success');
+        resetAddForm();
+        document.querySelector('.tab[data-tab="devices"]').click();
+    }
+}
+
+/* ============================================================
+   DEVICES LIST
+   ============================================================ */
+function renderDevices() {
+    const data = Data.load();
+    const filter = (document.getElementById('deviceFilter')?.value || '').trim().toLowerCase();
+    let devices = data.devices;
+    if (filter) {
+        devices = devices.filter(d =>
+            d.deviceName.toLowerCase().includes(filter) ||
+            (d.supplier || '').toLowerCase().includes(filter) ||
+            (d.contractNumber || '').toLowerCase().includes(filter)
+        );
+    }
+    const grid = document.getElementById('devicesGrid');
+    if (devices.length === 0) {
+        grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><i class="fas fa-microscope"></i><p>لا توجد أجهزة مسجّلة بعد</p></div>`;
+        return;
+    }
+    grid.innerHTML = devices.map(d => {
+        const s = getDeviceStatus(d);
+        const isComplete = s.remaining <= 0.001;
+        const isOverdue = s.overdueCount > 0;
+        const cardClass = isComplete ? 'complete' : (isOverdue ? 'overdue' : '');
+        return `
+            <div class="device-card ${cardClass}">
+                <h4><i class="fas fa-microscope"></i> ${escapeHtml(d.deviceName)}</h4>
+                <div class="supplier">${escapeHtml(d.supplier || '—')} ${d.contractNumber ? '· ' + escapeHtml(d.contractNumber) : ''}</div>
+                <div class="info-row"><span>إجمالي القيمة</span><span>${formatMoney(d.totalPrice)} د.ك</span></div>
+                <div class="info-row"><span>المدفوع</span><span style="color:#1b5e20;">${formatMoney(s.totalPaid)} د.ك</span></div>
+                <div class="info-row"><span>المتبقي</span><span style="color:#d32f2f;">${formatMoney(s.remaining)} د.ك</span></div>
+                <div class="info-row"><span>الأقساط</span><span>${s.paidCount} / ${s.totalInstallments}</span></div>
+                <div class="progress-bar"><div style="width:${Math.min(100, s.progress).toFixed(1)}%"></div></div>
+                <div class="progress-info">
+                    <span>${s.progress.toFixed(0)}% مكتمل</span>
+                    <span>${s.overdueCount > 0 ? '⚠️ متأخر: ' + s.overdueCount : (isComplete ? '✅ مكتمل' : 'القادم: ' + (s.nextDue ? formatDate(s.nextDue.dueDate) : '—'))}</span>
+                </div>
+                <div class="card-actions">
+                    <button class="btn btn-primary btn-small" onclick="loadStatement('${d.id}')"><i class="fas fa-file-invoice"></i> كشف حساب</button>
+                    <button class="btn btn-danger btn-small" onclick="deleteDevice('${d.id}')"><i class="fas fa-trash"></i> حذف</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function deleteDevice(id) {
+    if (!confirm('هل أنت متأكد من حذف هذا الجهاز وكل بياناته؟ لا يمكن التراجع.')) return;
+    const data = Data.load();
+    data.devices = data.devices.filter(d => d.id !== id);
+    if (Data.save(data)) {
+        showToast('تم حذف الجهاز', 'success');
+        renderDevices();
+        renderDashboard();
+    }
+}
+
+/* ============================================================
+   PAYMENT MODAL
+   ============================================================ */
+let pendingPayment = null;
+
+function openPaymentModal(deviceId, installmentNumber) {
+    const data = Data.load();
+    const device = data.devices.find(d => d.id === deviceId);
+    if (!device) return;
+    const schedule = computeSchedule(device);
+    const inst = schedule.find(s => s.number === installmentNumber);
+    if (!inst) return;
+    pendingPayment = { deviceId, installmentNumber };
+    document.getElementById('modalInfo').innerHTML = `
+        <div><strong>الجهاز:</strong> ${escapeHtml(device.deviceName)}</div>
+        <div><strong>رقم القسط:</strong> ${installmentNumber}</div>
+        <div><strong>تاريخ الاستحقاق:</strong> ${formatDate(inst.dueDate)}</div>
+        <div><strong>القيمة:</strong> ${formatMoney(inst.amount)} د.ك</div>
+    `;
+    document.getElementById('paymentDateInput').value = formatDateInput(new Date());
+    document.getElementById('paymentModal').classList.add('show');
+}
+
+function closePaymentModal() {
+    document.getElementById('paymentModal').classList.remove('show');
+    pendingPayment = null;
+}
+
+function confirmPayment() {
+    if (!pendingPayment) return;
+    const date = document.getElementById('paymentDateInput').value;
+    if (!date) { showToast('يرجى تحديد تاريخ الدفع', 'error'); return; }
+    const data = Data.load();
+    const device = data.devices.find(d => d.id === pendingPayment.deviceId);
+    if (!device) return;
+    device.payments = device.payments || {};
+    device.payments[pendingPayment.installmentNumber] = date;
+    if (Data.save(data)) {
+        showToast('تم تسجيل الدفعة بنجاح ✅', 'success');
+        closePaymentModal();
+        renderDashboard();
+        renderDevices();
+        if (currentStatementDeviceId) renderStatement();
+    }
+}
+
+function undoPayment(deviceId, installmentNumber) {
+    if (!confirm('هل تريد إلغاء تسجيل هذه الدفعة؟')) return;
+    const data = Data.load();
+    const device = data.devices.find(d => d.id === deviceId);
+    if (!device || !device.payments) return;
+    delete device.payments[installmentNumber];
+    if (Data.save(data)) {
+        showToast('تم إلغاء الدفعة', 'success');
+        renderDashboard();
+        renderDevices();
+        if (currentStatementDeviceId) renderStatement();
+    }
+}
+
+/* ============================================================
+   REPORTS
+   ============================================================ */
+function initReportDates() {
+    const today = new Date();
+    document.getElementById('reportFrom').value = formatDateInput(new Date(today.getFullYear(), today.getMonth(), 1));
+    document.getElementById('reportTo').value = formatDateInput(new Date(today.getFullYear(), today.getMonth()+1, 0));
+}
+
+function generateReport() {
+    const fromStr = document.getElementById('reportFrom').value;
+    const toStr = document.getElementById('reportTo').value;
+    if (!fromStr || !toStr) { showToast('يرجى تحديد الفترة', 'error'); return; }
+    const from = new Date(fromStr); from.setHours(0,0,0,0);
+    const to = new Date(toStr); to.setHours(23,59,59,999);
+    if (from > to) { showToast('تاريخ البداية يجب أن يكون قبل النهاية', 'error'); return; }
+    const data = Data.load();
+
+    // Contracts in period
+    const contractsInPeriod = data.devices.filter(d => {
+        const cd = new Date(d.contractDate);
+        return cd >= from && cd <= to;
+    });
+
+    // Payments in period
+    const paymentsInPeriod = [];
+    data.devices.forEach(d => {
+        const status = getDeviceStatus(d);
+        status.schedule.forEach(inst => {
+            const payDate = status.payments[inst.number];
+            if (!payDate) return;
+            const pd = new Date(payDate);
+            if (pd >= from && pd <= to) {
+                paymentsInPeriod.push({ device: d, inst, paidDate: pd });
+            }
+        });
+    });
+
+    const totalContractsValue = contractsInPeriod.reduce((s,d) => s + Number(d.totalPrice), 0);
+    const totalDownPayments = contractsInPeriod.reduce((s,d) => s + Number(d.downPayment || 0), 0);
+    const totalPaymentsValue = paymentsInPeriod.reduce((s, p) => s + p.inst.amount, 0);
+
+    const out = document.getElementById('reportOutput');
+    out.innerHTML = `
+        <div class="card">
+            <h3><i class="fas fa-file-alt"></i> التقرير من ${formatDate(from)} إلى ${formatDate(to)}</h3>
+            <div class="summary-grid">
+                <div class="summary-card gold">
+                    <div class="label"><i class="fas fa-file-signature"></i> عقود جديدة</div>
+                    <div class="value">${contractsInPeriod.length}</div>
+                    <div class="sub">بقيمة ${formatMoney(totalContractsValue)} د.ك</div>
+                </div>
+                <div class="summary-card green">
+                    <div class="label"><i class="fas fa-hand-holding-usd"></i> دفعات مقدمة</div>
+                    <div class="value">${formatMoney(totalDownPayments)}</div>
+                    <div class="sub">د.ك (عقود الفترة)</div>
+                </div>
+                <div class="summary-card">
+                    <div class="label"><i class="fas fa-money-bill-wave"></i> دفعات أقساط محصّلة</div>
+                    <div class="value">${paymentsInPeriod.length}</div>
+                    <div class="sub">بقيمة ${formatMoney(totalPaymentsValue)} د.ك</div>
+                </div>
+                <div class="summary-card red">
+                    <div class="label"><i class="fas fa-coins"></i> إجمالي الحركة</div>
+                    <div class="value">${formatMoney(totalDownPayments + totalPaymentsValue)}</div>
+                    <div class="sub">د.ك</div>
+                </div>
+            </div>
+
+            <h3 style="margin-top:1.2rem;"><i class="fas fa-file-signature"></i> العقود الجديدة</h3>
+            ${contractsInPeriod.length === 0 ? '<div class="empty-state"><p>لا توجد عقود جديدة في هذه الفترة</p></div>' : `
+            <div class="table-wrap"><table class="data-table">
+                <thead><tr>
+                    <th>الجهاز</th><th>المورد</th><th>رقم العقد</th><th>تاريخ العقد</th>
+                    <th>القيمة</th><th>مقدم</th><th>عدد الأقساط</th>
+                </tr></thead><tbody>
+                ${contractsInPeriod.map(d => `
+                    <tr>
+                        <td>${escapeHtml(d.deviceName)}</td>
+                        <td>${escapeHtml(d.supplier||'—')}</td>
+                        <td>${escapeHtml(d.contractNumber||'—')}</td>
+                        <td>${formatDate(d.contractDate)}</td>
+                        <td>${formatMoney(d.totalPrice)}</td>
+                        <td>${formatMoney(d.downPayment||0)}</td>
+                        <td>${d.installmentsCount}</td>
+                    </tr>`).join('')}
+                <tr class="total-row"><td colspan="4">الإجمالي</td><td>${formatMoney(totalContractsValue)}</td><td>${formatMoney(totalDownPayments)}</td><td>—</td></tr>
+                </tbody></table></div>`}
+
+            <h3 style="margin-top:1.2rem;"><i class="fas fa-money-bill-wave"></i> الدفعات المحصّلة</h3>
+            ${paymentsInPeriod.length === 0 ? '<div class="empty-state"><p>لا توجد دفعات محصّلة في هذه الفترة</p></div>' : `
+            <div class="table-wrap"><table class="data-table">
+                <thead><tr>
+                    <th>الجهاز</th><th>رقم القسط</th><th>تاريخ الاستحقاق</th><th>تاريخ الدفع</th><th>القيمة (د.ك)</th>
+                </tr></thead><tbody>
+                ${paymentsInPeriod.sort((a,b)=>a.paidDate-b.paidDate).map(p => `
+                    <tr>
+                        <td>${escapeHtml(p.device.deviceName)}</td>
+                        <td>${p.inst.number}</td>
+                        <td>${formatDate(p.inst.dueDate)}</td>
+                        <td>${formatDate(p.paidDate)}</td>
+                        <td>${formatMoney(p.inst.amount)}</td>
+                    </tr>`).join('')}
+                <tr class="total-row"><td colspan="4">الإجمالي</td><td>${formatMoney(totalPaymentsValue)}</td></tr>
+                </tbody></table></div>`}
+
+            <div class="form-actions">
+                <button class="btn btn-danger" onclick="exportReportPDF('${fromStr}','${toStr}')"><i class="fas fa-file-pdf"></i> تصدير التقرير PDF</button>
+            </div>
+        </div>
+    `;
+}
+
+/* ============================================================
+   STATEMENT
+   ============================================================ */
+let currentStatementDeviceId = null;
+
+function renderStatementSearch() {
+    const q = (document.getElementById('statementSearch').value || '').trim().toLowerCase();
+    const data = Data.load();
+    let matches = data.devices;
+    if (q) matches = matches.filter(d => d.deviceName.toLowerCase().includes(q) || (d.contractNumber||'').toLowerCase().includes(q));
+    const box = document.getElementById('statementSearchResults');
+    if (matches.length === 0) {
+        box.innerHTML = `<div class="empty-state" style="padding:1rem;"><p>لا توجد نتائج مطابقة</p></div>`;
+        return;
+    }
+    box.innerHTML = matches.map(d => {
+        const s = getDeviceStatus(d);
+        return `<div class="device-search-item" onclick="loadStatement('${d.id}')">
+            <div>
+                <div class="name">${escapeHtml(d.deviceName)}</div>
+                <div class="meta">${escapeHtml(d.supplier||'—')} ${d.contractNumber?'· '+escapeHtml(d.contractNumber):''}</div>
+            </div>
+            <div style="text-align:left; font-size:0.8rem;">
+                <div style="color:#d32f2f; font-weight:700;">${formatMoney(s.remaining)} د.ك</div>
+                <div style="color:#5d7a8c; font-size:0.72rem;">متبقي</div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function loadStatement(deviceId) {
+    currentStatementDeviceId = deviceId;
+    document.querySelector('.tab[data-tab="statement"]').click();
+    renderStatement();
+}
+
+function renderStatement() {
+    if (!currentStatementDeviceId) return;
+    const data = Data.load();
+    const device = data.devices.find(d => d.id === currentStatementDeviceId);
+    if (!device) return;
+    const status = getDeviceStatus(device);
+
+    const out = document.getElementById('statementOutput');
+    out.innerHTML = `
+        <div class="card">
+            <h3><i class="fas fa-file-invoice"></i> كشف حساب: ${escapeHtml(device.deviceName)}</h3>
+            <div class="form-grid" style="margin-bottom:1rem;">
+                <div class="form-field">
+                    <label><i class="fas fa-calendar-alt"></i> من تاريخ (اختياري)</label>
+                    <input type="date" id="stmtFrom" value="">
+                </div>
+                <div class="form-field">
+                    <label><i class="fas fa-calendar-alt"></i> إلى تاريخ (اختياري)</label>
+                    <input type="date" id="stmtTo" value="">
+                </div>
+                <div class="form-field" style="align-self:end;">
+                    <button class="btn btn-secondary" onclick="renderStatement()" style="width:100%;"><i class="fas fa-filter"></i> تطبيق الفلتر</button>
+                </div>
+            </div>
+
+            <div class="summary-grid" style="margin-bottom:1rem;">
+                <div class="summary-card">
+                    <div class="label">إجمالي القيمة</div>
+                    <div class="value">${formatMoney(device.totalPrice)}</div>
+                    <div class="sub">د.ك</div>
+                </div>
+                <div class="summary-card gold">
+                    <div class="label">الدفعة المقدمة</div>
+                    <div class="value">${formatMoney(device.downPayment||0)}</div>
+                    <div class="sub">د.ك</div>
+                </div>
+                <div class="summary-card green">
+                    <div class="label">إجمالي المسدّد</div>
+                    <div class="value">${formatMoney(status.totalPaid)}</div>
+                    <div class="sub">د.ك</div>
+                </div>
+                <div class="summary-card red">
+                    <div class="label">المتبقي</div>
+                    <div class="value">${formatMoney(status.remaining)}</div>
+                    <div class="sub">د.ك · متبقي ${status.remainingCount} قسط</div>
+                </div>
+            </div>
+
+            <div class="form-grid" style="margin-bottom:1rem; font-size:0.85rem;">
+                <div><strong>المورد:</strong> ${escapeHtml(device.supplier||'—')}</div>
+                <div><strong>رقم العقد:</strong> ${escapeHtml(device.contractNumber||'—')}</div>
+                <div><strong>تاريخ العقد:</strong> ${formatDate(device.contractDate)}</div>
+                <div><strong>تاريخ أول قسط:</strong> ${formatDate(device.firstInstallmentDate)}</div>
+                <div><strong>عدد الأقساط:</strong> ${device.installmentsCount}</div>
+                <div><strong>عدد الأقساط المدفوعة:</strong> ${status.paidCount}</div>
+                ${device.notes ? `<div style="grid-column:1/-1;"><strong>ملاحظات:</strong> ${escapeHtml(device.notes)}</div>` : ''}
+            </div>
+
+            <div id="stmtTableContainer">${renderStatementTable(device, status, null, null)}</div>
+
+            <div class="form-actions">
+                <button class="btn btn-danger" onclick="exportStatementPDF()"><i class="fas fa-file-pdf"></i> تصدير كشف الحساب PDF</button>
+            </div>
+        </div>
+    `;
+
+    // Bind optional filter inside statement
+    document.getElementById('stmtFrom').addEventListener('change', () => applyStmtFilter(device, status));
+    document.getElementById('stmtTo').addEventListener('change', () => applyStmtFilter(device, status));
+}
+
+function applyStmtFilter(device, status) {
+    const fromVal = document.getElementById('stmtFrom').value;
+    const toVal = document.getElementById('stmtTo').value;
+    const from = fromVal ? new Date(fromVal) : null;
+    const to = toVal ? new Date(toVal) : null;
+    if (from) from.setHours(0,0,0,0);
+    if (to) to.setHours(23,59,59,999);
+    document.getElementById('stmtTableContainer').innerHTML = renderStatementTable(device, status, from, to);
+}
+
+function renderStatementTable(device, status, from, to) {
+    let rows = status.schedule;
+    if (from) rows = rows.filter(r => new Date(r.dueDate) >= from);
+    if (to) rows = rows.filter(r => new Date(r.dueDate) <= to);
+    if (rows.length === 0) return `<div class="empty-state"><p>لا توجد أقساط في هذه الفترة</p></div>`;
+    const today = new Date(); today.setHours(0,0,0,0);
+    let html = `<div class="table-wrap"><table class="data-table">
+        <thead><tr>
+            <th>#</th><th>تاريخ الاستحقاق</th><th>القيمة (د.ك)</th><th>الحالة</th><th>تاريخ الدفع</th><th>إجراء</th>
+        </tr></thead><tbody>`;
+    let totalFiltered = 0, totalPaidFiltered = 0;
+    rows.forEach(inst => {
+        const payDate = status.payments[inst.number];
+        const isPaid = payDate !== undefined && payDate !== '';
+        const due = new Date(inst.dueDate); due.setHours(0,0,0,0);
+        const isOverdue = !isPaid && due < today;
+        const rowClass = isPaid ? 'paid' : (isOverdue ? 'overdue' : '');
+        totalFiltered += inst.amount;
+        if (isPaid) totalPaidFiltered += inst.amount;
+        let badge = isPaid ? '<span class="badge badge-paid">مدفوع</span>'
+            : (isOverdue ? '<span class="badge badge-overdue">متأخر</span>' : '<span class="badge badge-pending">لم يُدفع</span>');
+        const action = isPaid
+            ? `<button class="btn btn-secondary btn-small" onclick="undoPayment('${device.id}',${inst.number})"><i class="fas fa-undo"></i> إلغاء</button>`
+            : `<button class="btn btn-success btn-small" onclick="openPaymentModal('${device.id}',${inst.number})"><i class="fas fa-check"></i> دفع</button>`;
+        html += `<tr class="${rowClass}">
+            <td>${inst.number}</td>
+            <td>${formatDate(inst.dueDate)}</td>
+            <td>${formatMoney(inst.amount)}</td>
+            <td>${badge}</td>
+            <td>${payDate ? formatDate(payDate) : '—'}</td>
+            <td>${action}</td>
+        </tr>`;
+    });
+    html += `<tr class="total-row"><td colspan="2">إجمالي المعروض</td><td>${formatMoney(totalFiltered)}</td><td colspan="3">مدفوع منها: ${formatMoney(totalPaidFiltered)}</td></tr>`;
+    html += `</tbody></table></div>`;
+    return html;
+}
+
+/* ============================================================
+   PDF EXPORTS
+   ============================================================ */
+async function exportStatementPDF() {
+    if (!currentStatementDeviceId) return;
+    const data = Data.load();
+    const device = data.devices.find(d => d.id === currentStatementDeviceId);
+    if (!device) return;
+    const status = getDeviceStatus(device);
+
+    const { jsPDF } = window.jspdf;
+    const container = document.createElement('div');
+    container.style.position = 'fixed';
+    container.style.top = '0';
+    container.style.left = '-9999px';
+    container.style.width = '794px';
+    container.style.background = '#fff';
+    container.style.direction = 'rtl';
+    container.style.fontFamily = "'Segoe UI','Tajawal',sans-serif";
+    document.body.appendChild(container);
+
+    const pageDiv = document.createElement('div');
+    pageDiv.style.width = '794px';
+    pageDiv.style.padding = '24px';
+    pageDiv.style.background = '#fff';
+    pageDiv.style.boxSizing = 'border-box';
+    container.appendChild(pageDiv);
+
+    let scheduleRows = '';
+    status.schedule.forEach(inst => {
+        const payDate = status.payments[inst.number];
+        const isPaid = payDate !== undefined && payDate !== '';
+        const statusTxt = isPaid ? 'مدفوع' : 'غير مدفوع';
+        const statusColor = isPaid ? '#155724' : '#856404';
+        scheduleRows += `<tr>
+            <td style="padding:3px 5px; border-bottom:1px solid #ddd; text-align:center;">${inst.number}</td>
+            <td style="padding:3px 5px; text-align:center;">${formatDate(inst.dueDate)}</td>
+            <td style="padding:3px 5px; text-align:center;">${formatMoney(inst.amount)}</td>
+            <td style="padding:3px 5px; text-align:center; color:${statusColor}; font-weight:bold;">${statusTxt}</td>
+            <td style="padding:3px 5px; text-align:center;">${payDate ? formatDate(payDate) : '—'}</td>
+        </tr>`;
+    });
+
+    pageDiv.innerHTML = `
+        <div style="text-align:center; margin-bottom:8px;">
+            <img src="https://i.postimg.cc/ZK4kBD7D/klynk.jpg" style="height:50px; border-radius:12px;">
+            <h2 style="color:#1e3a5f; margin:4px 0; font-size:1.2rem;">كلينك شانزليزيه</h2>
+            <p style="color:#2c6e2c; font-weight:bold; font-size:0.75rem; margin:0;">نظام إدارة أقساط الأجهزة الطبية</p>
+            <hr style="margin:6px 0;">
+            <h3 style="color:#0d47a1; margin:4px 0; font-size:1rem;">كشف حساب جهاز: ${escapeHtml(device.deviceName)}</h3>
+        </div>
+        <div style="font-size:0.75rem; line-height:1.4; margin-bottom:8px;">
+            <div><strong>المورد:</strong> ${escapeHtml(device.supplier||'—')} &nbsp;·&nbsp; <strong>رقم العقد:</strong> ${escapeHtml(device.contractNumber||'—')}</div>
+            <div><strong>تاريخ العقد:</strong> ${formatDate(device.contractDate)} &nbsp;·&nbsp; <strong>تاريخ أول قسط:</strong> ${formatDate(device.firstInstallmentDate)}</div>
+            <div><strong>إجمالي القيمة:</strong> ${formatMoney(device.totalPrice)} د.ك &nbsp;·&nbsp; <strong>الدفعة المقدمة:</strong> ${formatMoney(device.downPayment||0)} د.ك</div>
+            <div><strong>عدد الأقساط:</strong> ${device.installmentsCount} &nbsp;·&nbsp; <strong>المدفوع منها:</strong> ${status.paidCount} &nbsp;·&nbsp; <strong>المتبقي:</strong> ${status.remainingCount}</div>
+        </div>
+        <h4 style="background:#1976d2; color:white; padding:3px; border-radius:5px; text-align:center; font-size:0.8rem; margin:4px 0;">جدول الأقساط</h4>
+        <table style="width:100%; border-collapse:collapse; font-size:0.7rem;">
+            <thead>
+                <tr style="background:#0d47a1; color:white;">
+                    <th style="padding:4px;">#</th>
+                    <th style="padding:4px;">تاريخ الاستحقاق</th>
+                    <th style="padding:4px;">القيمة (د.ك)</th>
+                    <th style="padding:4px;">الحالة</th>
+                    <th style="padding:4px;">تاريخ الدفع</th>
+                </tr>
+            </thead>
+            <tbody>${scheduleRows}</tbody>
+        </table>
+        <div style="margin-top:8px; font-size:0.8rem; display:flex; justify-content:space-between; background:#eef5ff; padding:6px; border-radius:6px;">
+            <div><strong>إجمالي المسدّد:</strong> ${formatMoney(status.totalPaid)} د.ك</div>
+            <div><strong>المتبقي:</strong> ${formatMoney(status.remaining)} د.ك</div>
+            <div><strong>نسبة السداد:</strong> ${status.progress.toFixed(1)}%</div>
+        </div>
+        <div style="margin-top:18px; font-size:0.7rem; text-align:center; color:#5f7a8c;">
+            تاريخ الإصدار: ${formatDate(new Date())} · تطبق الشروط وفق سياسة كلينك شانزليزيه
+        </div>
+        <div style="margin-top:24px; display:flex; justify-content:space-around; font-size:0.75rem;">
+            <div style="text-align:center;"><strong>توقيع المسؤول</strong><br><br>_______________________</div>
+            <div style="text-align:center;"><strong>توقيع المورد</strong><br><br>_______________________</div>
+        </div>
+    `;
+
+    try {
+        const canvas = await html2canvas(pageDiv, { scale: 1.8, useCORS: true });
+        const imgData = canvas.toDataURL('image/jpeg', 1.0);
+        const pdf = new jsPDF('p', 'pt', 'a4');
+        const imgWidth = pdf.internal.pageSize.getWidth();
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
+        pdf.save(`كشف_حساب_${(device.deviceName || 'جهاز').substring(0,30)}.pdf`);
+    } catch (e) {
+        showToast('حدث خطأ أثناء إنشاء PDF', 'error');
+    } finally {
+        document.body.removeChild(container);
+    }
+}
+
+async function exportReportPDF(fromStr, toStr) {
+    const from = new Date(fromStr); from.setHours(0,0,0,0);
+    const to = new Date(toStr); to.setHours(23,59,59,999);
+    const data = Data.load();
+
+    const contractsInPeriod = data.devices.filter(d => {
+        const cd = new Date(d.contractDate);
+        return cd >= from && cd <= to;
+    });
+    const paymentsInPeriod = [];
+    data.devices.forEach(d => {
+        const status = getDeviceStatus(d);
+        status.schedule.forEach(inst => {
+            const payDate = status.payments[inst.number];
+            if (!payDate) return;
+            const pd = new Date(payDate);
+            if (pd >= from && pd <= to) paymentsInPeriod.push({ device: d, inst, paidDate: pd });
+        });
+    });
+
+    const totalContractsValue = contractsInPeriod.reduce((s,d) => s + Number(d.totalPrice), 0);
+    const totalDownPayments = contractsInPeriod.reduce((s,d) => s + Number(d.downPayment||0), 0);
+    const totalPaymentsValue = paymentsInPeriod.reduce((s,p) => s + p.inst.amount, 0);
+
+    const { jsPDF } = window.jspdf;
+    const container = document.createElement('div');
+    container.style.position = 'fixed'; container.style.top = '0'; container.style.left = '-9999px';
+    container.style.width = '794px'; container.style.background = '#fff'; container.style.direction = 'rtl';
+    container.style.fontFamily = "'Segoe UI','Tajawal',sans-serif";
+    document.body.appendChild(container);
+    const pageDiv = document.createElement('div');
+    pageDiv.style.width = '794px'; pageDiv.style.padding = '20px';
+    pageDiv.style.background = '#fff'; pageDiv.style.boxSizing = 'border-box';
+    container.appendChild(pageDiv);
+
+    const contractsRows = contractsInPeriod.map(d => `
+        <tr>
+            <td style="padding:3px; border-bottom:1px solid #ddd;">${escapeHtml(d.deviceName)}</td>
+            <td style="padding:3px; border-bottom:1px solid #ddd;">${formatDate(d.contractDate)}</td>
+            <td style="padding:3px; border-bottom:1px solid #ddd;">${formatMoney(d.totalPrice)}</td>
+            <td style="padding:3px; border-bottom:1px solid #ddd;">${formatMoney(d.downPayment||0)}</td>
+            <td style="padding:3px; border-bottom:1px solid #ddd;">${d.installmentsCount}</td>
+        </tr>`).join('');
+
+    const paymentsRows = paymentsInPeriod.sort((a,b)=>a.paidDate-b.paidDate).map(p => `
+        <tr>
+            <td style="padding:3px; border-bottom:1px solid #ddd;">${escapeHtml(p.device.deviceName)}</td>
+            <td style="padding:3px; border-bottom:1px solid #ddd;">${p.inst.number}</td>
+            <td style="padding:3px; border-bottom:1px solid #ddd;">${formatDate(p.inst.dueDate)}</td>
+            <td style="padding:3px; border-bottom:1px solid #ddd;">${formatDate(p.paidDate)}</td>
+            <td style="padding:3px; border-bottom:1px solid #ddd;">${formatMoney(p.inst.amount)}</td>
+        </tr>`).join('');
+
+    pageDiv.innerHTML = `
+        <div style="text-align:center; margin-bottom:8px;">
+            <img src="https://i.postimg.cc/ZK4kBD7D/klynk.jpg" style="height:45px; border-radius:10px;">
+            <h2 style="color:#1e3a5f; margin:2px 0; font-size:1.1rem;">كلينك شانزليزيه</h2>
+            <p style="color:#2c6e2c; font-weight:bold; font-size:0.72rem; margin:0;">التقرير الدوري لإدارة أقساط الأجهزة</p>
+            <hr style="margin:4px 0;">
+            <h3 style="color:#0d47a1; margin:3px 0; font-size:0.95rem;">الفترة من ${formatDate(from)} إلى ${formatDate(to)}</h3>
+        </div>
+        <div style="display:flex; gap:6px; margin-bottom:8px; font-size:0.72rem;">
+            <div style="flex:1; background:#fef7e0; padding:6px; border-radius:6px; border-right:4px solid #b8860b;">
+                <div style="color:#5a3e1b;">عقود جديدة: <strong>${contractsInPeriod.length}</strong></div>
+                <div style="color:#5a3e1b;">بقيمة: <strong>${formatMoney(totalContractsValue)} د.ك</strong></div>
+            </div>
+            <div style="flex:1; background:#f0f9f0; padding:6px; border-radius:6px; border-right:4px solid #1b5e20;">
+                <div style="color:#155724;">دفعات مقدمة: <strong>${formatMoney(totalDownPayments)} د.ك</strong></div>
+            </div>
+            <div style="flex:1; background:#eef5ff; padding:6px; border-radius:6px; border-right:4px solid #1976d2;">
+                <div style="color:#0d47a1;">دفعات أقساط: <strong>${paymentsInPeriod.length}</strong></div>
+                <div style="color:#0d47a1;">بقيمة: <strong>${formatMoney(totalPaymentsValue)} د.ك</strong></div>
+            </div>
+        </div>
+        <h4 style="background:#1976d2; color:white; padding:3px; border-radius:5px; text-align:center; font-size:0.75rem; margin:4px 0;">العقود الجديدة</h4>
+        ${contractsInPeriod.length === 0 ? '<p style="font-size:0.72rem; text-align:center; color:#5d7a8c;">لا توجد عقود في هذه الفترة</p>' : `
+        <table style="width:100%; border-collapse:collapse; font-size:0.68rem;">
+            <thead><tr style="background:#0d47a1; color:white;">
+                <th style="padding:3px;">الجهاز</th><th style="padding:3px;">التاريخ</th><th style="padding:3px;">القيمة</th><th style="padding:3px;">مقدم</th><th style="padding:3px;">أقساط</th>
+            </tr></thead>
+            <tbody>${contractsRows}
+                <tr style="background:#eef2f7; font-weight:bold;">
+                    <td colspan="2" style="padding:3px;">الإجمالي</td>
+                    <td style="padding:3px;">${formatMoney(totalContractsValue)}</td>
+                    <td style="padding:3px;">${formatMoney(totalDownPayments)}</td>
+                    <td style="padding:3px;">—</td>
+                </tr>
+            </tbody>
+        </table>`}
+
+        <h4 style="background:#1976d2; color:white; padding:3px; border-radius:5px; text-align:center; font-size:0.75rem; margin:6px 0 4px;">الدفعات المحصّلة</h4>
+        ${paymentsInPeriod.length === 0 ? '<p style="font-size:0.72rem; text-align:center; color:#5d7a8c;">لا توجد دفعات في هذه الفترة</p>' : `
+        <table style="width:100%; border-collapse:collapse; font-size:0.68rem;">
+            <thead><tr style="background:#0d47a1; color:white;">
+                <th style="padding:3px;">الجهاز</th><th style="padding:3px;">قسط #</th><th style="padding:3px;">الاستحقاق</th><th style="padding:3px;">الدفع</th><th style="padding:3px;">القيمة</th>
+            </tr></thead>
+            <tbody>${paymentsRows}
+                <tr style="background:#eef2f7; font-weight:bold;">
+                    <td colspan="4" style="padding:3px;">الإجمالي</td>
+                    <td style="padding:3px;">${formatMoney(totalPaymentsValue)}</td>
+                </tr>
+            </tbody>
+        </table>`}
+
+        <div style="margin-top:14px; font-size:0.65rem; text-align:center; color:#5f7a8c;">
+            تاريخ الإصدار: ${formatDate(new Date())} · تطبق الشروط وفق سياسة كلينك شانزليزيه
+        </div>
+        <div style="margin-top:20px; display:flex; justify-content:space-around; font-size:0.7rem;">
+            <div style="text-align:center;"><strong>توقيع المسؤول</strong><br><br>_______________________</div>
+            <div style="text-align:center;"><strong>المدير المالي</strong><br><br>_______________________</div>
+        </div>
+    `;
+
+    try {
+        const canvas = await html2canvas(pageDiv, { scale: 1.8, useCORS: true });
+        const imgData = canvas.toDataURL('image/jpeg', 1.0);
+        const pdf = new jsPDF('p', 'pt', 'a4');
+        const imgWidth = pdf.internal.pageSize.getWidth();
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
+        pdf.save(`تقرير_${fromStr}_إلى_${toStr}.pdf`);
+    } catch (e) {
+        showToast('حدث خطأ أثناء إنشاء PDF', 'error');
+    } finally {
+        document.body.removeChild(container);
+    }
+}
+
+/* ============================================================
+   BACKUP / RESTORE
+   ============================================================ */
+function exportDataJSON() {
+    const data = Data.load();
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `champs_elysees_backup_${formatDateInput(new Date())}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('تم تصدير النسخة الاحتياطية', 'success');
+}
+
+function importDataJSON(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        try {
+            const imported = JSON.parse(e.target.result);
+            if (!imported.devices || !Array.isArray(imported.devices)) throw new Error('صيغة غير صحيحة');
+            if (!confirm('سيتم استبدال البيانات الحالية بالبيانات المستوردة. هل تريد المتابعة؟')) return;
+            Data.save(imported);
+            showToast('تم استيراد البيانات بنجاح', 'success');
+            renderDashboard();
+            renderDevices();
+        } catch (err) {
+            showToast('ملف غير صالح', 'error');
+        }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+function init() {
+    // Seed sample data if first run
+    let data = Data.load();
+    if (data.devices.length === 0) {
+        data.devices = [
+            {
+                id: generateId(),
+                deviceName: 'جهاز مراقبة المريض - Patient Monitor',
+                supplier: 'شركة الخليج للأجهزة الطبية',
+                contractNumber: 'DEV-2026-001',
+                contractDate: '2026-01-10',
+                totalPrice: 1500,
+                downPayment: 300,
+                installmentsCount: 12,
+                firstInstallmentDate: '2026-02-01',
+                notes: 'جهاز 5 بارامترات مع شاشة 15 بوصة',
+                payments: { 1: '2026-02-01', 2: '2026-03-02' },
+                createdAt: new Date().toISOString()
+            },
+            {
+                id: generateId(),
+                deviceName: 'جهاز تخطيط القلب - ECG Machine',
+                supplier: 'الشركة الكويتية للتقنيات الطبية',
+                contractNumber: 'DEV-2026-002',
+                contractDate: '2026-02-15',
+                totalPrice: 2400,
+                downPayment: 0,
+                installmentsCount: 20,
+                firstInstallmentDate: '2026-03-15',
+                notes: 'جهاز 12 قناة مع طابعة مدمجة',
+                payments: {},
+                createdAt: new Date().toISOString()
+            }
+        ];
+        Data.save(data);
+    }
+
+    document.getElementById('currentYear').innerText = new Date().getFullYear();
+    initAddFormDefaults();
+    initReportDates();
+    renderDashboard();
+    renderDevices();
+    renderStatementSearch();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
