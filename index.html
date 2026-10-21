@@ -51,12 +51,42 @@ body {
     margin-bottom: 1rem;
     box-shadow: 0 6px 20px rgba(13,71,161,0.25);
 }
+
+/* ===== Logo ===== */
 .logo-area { display: flex; align-items: center; gap: 15px; }
-.logo-area img {
-    height: 60px; width: auto; border-radius: 14px;
-    background: white; padding: 4px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+.logo-box {
+    width: 80px;
+    height: 80px;
+    background: white;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+    flex-shrink: 0;
+    overflow: hidden;
 }
+.logo-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    border-radius: 12px;
+}
+.logo-fallback {
+    color: var(--primary-dark);
+    font-weight: 800;
+    font-size: 1.3rem;
+    display: none;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1;
+}
+
 .clinic-title { flex: 1; text-align: center; }
 .clinic-title h2 { font-size: 1.5rem; font-weight: 800; }
 .clinic-title p { font-size: 0.82rem; opacity: 0.9; margin-top: 2px; }
@@ -465,7 +495,7 @@ input[type=number]::-webkit-outer-spin-button {
 .toast.info { background: var(--primary); }
 @keyframes slideUp { from { bottom: 0; opacity: 0; } to { bottom: 30px; opacity: 1; } }
 
-/* Signature card - floating, red border, blue text */
+/* Signature card */
 .signature-card {
     position: fixed;
     bottom: 20px; left: 20px;
@@ -519,7 +549,7 @@ input[type=number]::-webkit-outer-spin-button {
     .clinic-header { padding: 0.8rem 1rem; border-radius: 18px; }
     .clinic-title h2 { font-size: 1.15rem; }
     .clinic-title p { font-size: 0.72rem; }
-    .logo-area img { height: 45px; }
+    .logo-box { width: 60px; height: 60px; border-radius: 12px; }
     .year-badge { font-size: 0.75rem; padding: 0.3rem 0.7rem; }
     .summary-card .value { font-size: 1.35rem; }
     .tab { padding: 9px 12px; font-size: 0.78rem; }
@@ -541,10 +571,13 @@ input[type=number]::-webkit-outer-spin-button {
 
 <div class="wrapper">
 
-    <!-- Header -->
+    <!-- Header with new Logo -->
     <div class="clinic-header">
         <div class="logo-area">
-            <img src="https://i.postimg.cc/ZK4kBD7D/klynk.jpg" alt="كلينك شانزليزيه" onerror="this.src='https://placehold.co/80x80?text=KLYNK'">
+            <div class="logo-box" title="كلينك شانزليزيه">
+                <img id="headerLogo" src="https://i.postimg.cc/5yTBb8Xx/LOGO-1.jpg" alt="كلينك شانزليزيه">
+                <div class="logo-fallback" id="logoFallback">CE</div>
+            </div>
         </div>
         <div class="clinic-title">
             <h2>كلينك شانزليزيه</h2>
@@ -555,7 +588,7 @@ input[type=number]::-webkit-outer-spin-button {
         </div>
     </div>
 
-    <!-- Backup Bar (أعلى الصفحة) -->
+    <!-- Backup Bar -->
     <div class="backup-bar">
         <div class="backup-info">
             <i class="fas fa-shield-alt"></i>
@@ -581,7 +614,7 @@ input[type=number]::-webkit-outer-spin-button {
         <button class="tab" data-tab="statement"><i class="fas fa-file-invoice"></i> كشف حساب جهاز</button>
     </nav>
 
-    <!-- ===== DASHBOARD ===== -->
+    <!-- DASHBOARD -->
     <section id="tab-dashboard" class="tab-content active">
         <div class="summary-grid" id="dashboardSummary"></div>
 
@@ -612,7 +645,7 @@ input[type=number]::-webkit-outer-spin-button {
         </div>
     </section>
 
-    <!-- ===== ADD DEVICE ===== -->
+    <!-- ADD DEVICE -->
     <section id="tab-add" class="tab-content">
         <div class="card">
             <h3><i class="fas fa-plus-circle"></i> تسجيل جهاز جديد بنظام الأقساط</h3>
@@ -669,7 +702,7 @@ input[type=number]::-webkit-outer-spin-button {
         </div>
     </section>
 
-    <!-- ===== DEVICES LIST ===== -->
+    <!-- DEVICES LIST -->
     <section id="tab-devices" class="tab-content">
         <div class="card">
             <h3><i class="fas fa-list"></i> الأجهزة المسجّلة</h3>
@@ -680,7 +713,7 @@ input[type=number]::-webkit-outer-spin-button {
         </div>
     </section>
 
-    <!-- ===== REPORTS ===== -->
+    <!-- REPORTS -->
     <section id="tab-reports" class="tab-content">
         <div class="card">
             <h3><i class="fas fa-chart-bar"></i> التقرير الدوري</h3>
@@ -701,7 +734,7 @@ input[type=number]::-webkit-outer-spin-button {
         <div id="reportOutput"></div>
     </section>
 
-    <!-- ===== STATEMENT ===== -->
+    <!-- STATEMENT -->
     <section id="tab-statement" class="tab-content">
         <div class="card">
             <h3><i class="fas fa-file-invoice"></i> كشف حساب جهاز</h3>
@@ -755,6 +788,11 @@ input[type=number]::-webkit-outer-spin-button {
 </a>
 
 <script>
+/* ============================================================
+   LOGO URL
+   ============================================================ */
+const LOGO_URL = 'https://i.postimg.cc/5yTBb8Xx/LOGO-1.jpg';
+
 /* ============================================================
    DATA LAYER
    ============================================================ */
@@ -886,7 +924,6 @@ function startBackupTimer() {
 }
 
 function showBackupReminder() {
-    // Don't show if another modal is open
     if (document.querySelector('.modal-overlay.show')) return;
     document.getElementById('backupReminderModal').classList.add('show');
 }
@@ -956,7 +993,6 @@ function renderDashboard() {
     const today = new Date(); today.setHours(0,0,0,0);
     const in30 = new Date(today); in30.setDate(in30.getDate() + 30);
 
-    // Next month range
     const nextMonthStart = new Date(today.getFullYear(), today.getMonth() + 1, 1);
     const nextMonthEnd = new Date(today.getFullYear(), today.getMonth() + 2, 0, 23, 59, 59);
     let nextMonthTotal = 0;
@@ -978,7 +1014,6 @@ function renderDashboard() {
             const isPaid = status.payments[inst.number] !== undefined && status.payments[inst.number] !== '';
             if (isPaid) return;
             const due = new Date(inst.dueDate); due.setHours(0,0,0,0);
-            // Next month
             if (due >= nextMonthStart && due <= nextMonthEnd) {
                 nextMonthTotal += inst.amount;
                 nextMonthCount++;
@@ -994,7 +1029,6 @@ function renderDashboard() {
 
     const totalPayments = totalDownPayments + totalInstallmentsPaid;
 
-    // Summary cards
     document.getElementById('dashboardSummary').innerHTML = `
         <div class="summary-card blue">
             <div class="label"><i class="fas fa-microscope"></i> عدد الأجهزة</div>
@@ -1023,7 +1057,6 @@ function renderDashboard() {
         </div>
     `;
 
-    // Summary totals table
     document.getElementById('summaryTotalsBody').innerHTML = `
         <tr>
             <td>إجمالي قيم الأجهزة</td>
@@ -1427,7 +1460,6 @@ function renderStatement() {
     if (!device) return;
     const status = getDeviceStatus(device);
 
-    // Default period: from Jan 1 of current year to today
     const today = new Date();
     const defaultFrom = `${today.getFullYear()}-01-01`;
     const defaultTo = formatDateInput(today);
@@ -1549,6 +1581,23 @@ function renderStatementTable(device, status, from, to) {
 }
 
 /* ============================================================
+   PDF HELPERS - استخدام رابط الشعار الجديد مباشرة
+   ============================================================ */
+function getLogoURL() {
+    return LOGO_URL;
+}
+
+function preloadImage(url) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => resolve(true);
+        img.onerror = () => resolve(false);
+        img.src = url;
+    });
+}
+
+/* ============================================================
    PDF EXPORTS
    ============================================================ */
 async function exportStatementPDF() {
@@ -1557,6 +1606,10 @@ async function exportStatementPDF() {
     const device = data.devices.find(d => d.id === currentStatementDeviceId);
     if (!device) return;
     const status = getDeviceStatus(device);
+    const logoURI = getLogoURL();
+
+    // preload logo
+    await preloadImage(logoURI);
 
     const { jsPDF } = window.jspdf;
     const container = document.createElement('div');
@@ -1593,7 +1646,7 @@ async function exportStatementPDF() {
 
     pageDiv.innerHTML = `
         <div style="text-align:center; margin-bottom:8px;">
-            <img src="https://i.postimg.cc/ZK4kBD7D/klynk.jpg" style="height:50px; border-radius:12px;">
+            <img src="${logoURI}" crossorigin="anonymous" style="height:70px; width:70px; object-fit:contain; border-radius:10px;">
             <h2 style="color:#0d47a1; margin:4px 0; font-size:1.2rem;">كلينك شانزليزيه</h2>
             <p style="color:#2e7d32; font-weight:bold; font-size:0.75rem; margin:0;">نظام إدارة أقساط الأجهزة الطبية</p>
             <hr style="margin:6px 0;">
@@ -1633,7 +1686,7 @@ async function exportStatementPDF() {
     `;
 
     try {
-        const canvas = await html2canvas(pageDiv, { scale: 1.8, useCORS: true });
+        const canvas = await html2canvas(pageDiv, { scale: 1.8, useCORS: true, allowTaint: false });
         const imgData = canvas.toDataURL('image/jpeg', 1.0);
         const pdf = new jsPDF('p', 'pt', 'a4');
         const imgWidth = pdf.internal.pageSize.getWidth();
@@ -1651,6 +1704,9 @@ async function exportReportPDF(fromStr, toStr) {
     const from = new Date(fromStr); from.setHours(0,0,0,0);
     const to = new Date(toStr); to.setHours(23,59,59,999);
     const data = Data.load();
+    const logoURI = getLogoURL();
+
+    await preloadImage(logoURI);
 
     const contractsInPeriod = data.devices.filter(d => {
         const cd = new Date(d.contractDate);
@@ -1702,7 +1758,7 @@ async function exportReportPDF(fromStr, toStr) {
 
     pageDiv.innerHTML = `
         <div style="text-align:center; margin-bottom:8px;">
-            <img src="https://i.postimg.cc/ZK4kBD7D/klynk.jpg" style="height:45px; border-radius:10px;">
+            <img src="${logoURI}" crossorigin="anonymous" style="height:60px; width:60px; object-fit:contain; border-radius:10px;">
             <h2 style="color:#0d47a1; margin:2px 0; font-size:1.1rem;">كلينك شانزليزيه</h2>
             <p style="color:#2e7d32; font-weight:bold; font-size:0.72rem; margin:0;">التقرير الدوري لإدارة أقساط الأجهزة</p>
             <hr style="margin:4px 0;">
@@ -1761,7 +1817,7 @@ async function exportReportPDF(fromStr, toStr) {
     `;
 
     try {
-        const canvas = await html2canvas(pageDiv, { scale: 1.8, useCORS: true });
+        const canvas = await html2canvas(pageDiv, { scale: 1.8, useCORS: true, allowTaint: false });
         const imgData = canvas.toDataURL('image/jpeg', 1.0);
         const pdf = new jsPDF('p', 'pt', 'a4');
         const imgWidth = pdf.internal.pageSize.getWidth();
@@ -1788,7 +1844,6 @@ function exportDataJSON() {
     a.click();
     URL.revokeObjectURL(url);
     showToast('تم تصدير النسخة الاحتياطية ✅', 'success');
-    // Reset reminder timer
     startBackupTimer();
 }
 
@@ -1815,16 +1870,36 @@ function importDataJSON(event) {
 }
 
 /* ============================================================
+   LOGO FALLBACK HANDLER
+   ============================================================ */
+function setupLogoFallback() {
+    const img = document.getElementById('headerLogo');
+    const fallback = document.getElementById('logoFallback');
+    if (!img || !fallback) return;
+    img.addEventListener('error', () => {
+        img.style.display = 'none';
+        fallback.style.display = 'flex';
+    });
+    img.addEventListener('load', () => {
+        img.style.display = 'block';
+        fallback.style.display = 'none';
+    });
+}
+
+/* ============================================================
    INIT
    ============================================================ */
 function init() {
     document.getElementById('currentYear').innerText = new Date().getFullYear();
     initAddFormDefaults();
     initReportDates();
+    setupLogoFallback();
     renderDashboard();
     renderDevices();
     renderStatementSearch();
     startBackupTimer();
+    // Preload logo once so subsequent PDFs are instant
+    preloadImage(LOGO_URL);
 }
 
 document.addEventListener('DOMContentLoaded', init);
