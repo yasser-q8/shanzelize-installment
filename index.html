@@ -10,195 +10,287 @@
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+:root {
+    --primary: #1565c0;
+    --primary-dark: #0d47a1;
+    --success: #2e7d32;
+    --success-dark: #1b5e20;
+    --warning: #ef6c00;
+    --danger: #c62828;
+    --teal: #00897b;
+    --bg: #f5f7fa;
+    --bg-soft: #eef2f7;
+    --card: #ffffff;
+    --text: #1e293b;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --border-soft: #f1f5f9;
+}
+
 body {
-    background: linear-gradient(145deg, #eef2f7 0%, #d9e2ec 100%);
+    background: var(--bg);
     font-family: 'Segoe UI', 'Tajawal', 'Cairo', system-ui, sans-serif;
-    padding: 1.5rem 1rem 3rem;
+    padding: 1rem 1rem 6rem;
     min-height: 100vh;
-    color: #1e2f3e;
+    color: var(--text);
 }
 
 .wrapper { max-width: 1400px; margin: 0 auto; }
 
-/* Header */
+/* ===== Header ===== */
 .clinic-header {
-    background: linear-gradient(135deg, #d32f2f, #1b5e20, #0d47a1);
+    background: linear-gradient(135deg, #0d47a1, #1565c0);
     padding: 1rem 1.8rem;
-    border-radius: 32px;
+    border-radius: 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 1rem;
     color: white;
-    margin-bottom: 1.2rem;
-    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.3);
+    margin-bottom: 1rem;
+    box-shadow: 0 6px 20px rgba(13,71,161,0.25);
 }
 .logo-area { display: flex; align-items: center; gap: 15px; }
 .logo-area img {
-    height: 65px; width: auto; border-radius: 18px;
-    background: white; padding: 5px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    height: 60px; width: auto; border-radius: 14px;
+    background: white; padding: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 .clinic-title { flex: 1; text-align: center; }
-.clinic-title h2 { font-size: 1.7rem; font-weight: 800; }
-.clinic-title p { font-size: 0.85rem; opacity: 0.9; margin-top: 2px; }
+.clinic-title h2 { font-size: 1.5rem; font-weight: 800; }
+.clinic-title p { font-size: 0.82rem; opacity: 0.9; margin-top: 2px; }
 .year-badge {
-    background: rgba(255,255,240,0.2);
-    backdrop-filter: blur(4px);
-    padding: 0.5rem 1rem;
-    border-radius: 40px;
-    font-weight: bold;
-    font-size: 1rem;
+    background: rgba(255,255,255,0.18);
+    padding: 0.4rem 0.9rem;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 0.9rem;
 }
 
-/* Tabs */
+/* ===== Backup Bar ===== */
+.backup-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 18px;
+    padding: 0.8rem 1.1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.backup-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+.backup-info i { font-size: 1.3rem; color: var(--warning); }
+.backup-actions { display: flex; gap: 0.7rem; flex-wrap: wrap; }
+.btn-backup {
+    background: var(--success);
+    color: white;
+    border: none;
+    padding: 13px 24px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: inherit;
+    box-shadow: 0 4px 12px rgba(46,125,50,0.3);
+    transition: 0.2s;
+}
+.btn-backup:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(46,125,50,0.4); }
+.btn-restore {
+    background: var(--primary);
+    color: white;
+    padding: 13px 24px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: inherit;
+    box-shadow: 0 4px 12px rgba(21,101,192,0.3);
+    transition: 0.2s;
+    border: none;
+}
+.btn-restore:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(21,101,192,0.4); }
+
+/* ===== Tabs ===== */
 .tabs {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.6rem;
+    gap: 0.5rem;
     background: white;
     padding: 0.5rem;
-    border-radius: 24px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    border-radius: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     margin-bottom: 1.2rem;
     overflow-x: auto;
+    border: 1px solid var(--border);
 }
 .tab {
     border: none;
     background: transparent;
-    padding: 12px 20px;
-    border-radius: 18px;
+    padding: 11px 18px;
+    border-radius: 12px;
     font-family: inherit;
     font-weight: 700;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     cursor: pointer;
-    color: #4a6b7f;
+    color: var(--text-muted);
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    transition: 0.2s;
+    transition: 0.15s;
     white-space: nowrap;
 }
-.tab:hover { background: #f0f4fa; color: #0d47a1; }
-.tab.active {
-    background: linear-gradient(95deg, #0d47a1, #1976d2);
-    color: white;
-    box-shadow: 0 4px 12px rgba(13,71,161,0.3);
-}
+.tab:hover { background: var(--bg-soft); color: var(--primary); }
+.tab.active { background: var(--primary); color: white; }
 
-/* Cards */
+/* ===== Cards ===== */
 .card {
-    background: white;
-    border-radius: 28px;
-    padding: 1.5rem;
-    box-shadow: 0 8px 24px -8px rgba(0,0,0,0.1);
+    background: var(--card);
+    border-radius: 20px;
+    padding: 1.3rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     margin-bottom: 1.2rem;
+    border: 1px solid var(--border);
 }
 .card h3 {
-    font-size: 1.15rem;
-    color: #0b3b4f;
+    font-size: 1.05rem;
+    color: var(--primary-dark);
     margin-bottom: 1rem;
     padding-bottom: 0.6rem;
-    border-bottom: 2px solid #eef2f7;
+    border-bottom: 2px solid var(--border-soft);
     display: flex;
     align-items: center;
     gap: 8px;
+    font-weight: 700;
 }
 
-/* Tab content */
 .tab-content { display: none; }
 .tab-content.active { display: block; }
 
-/* Summary cards grid */
+/* ===== Summary cards ===== */
 .summary-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 0.9rem;
     margin-bottom: 1.2rem;
 }
 .summary-card {
     background: white;
-    border-radius: 24px;
-    padding: 1.2rem;
-    box-shadow: 0 6px 20px -6px rgba(0,0,0,0.1);
-    border-right: 6px solid #1976d2;
+    border-radius: 18px;
+    padding: 1.1rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border: 1px solid var(--border);
+    border-right: 5px solid var(--primary);
+    transition: 0.15s;
 }
-.summary-card.green { border-right-color: #1b5e20; }
-.summary-card.red { border-right-color: #d32f2f; }
-.summary-card.gold { border-right-color: #b8860b; }
+.summary-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+.summary-card.blue { border-right-color: var(--primary); }
+.summary-card.amber { border-right-color: var(--warning); }
+.summary-card.green { border-right-color: var(--success); }
+.summary-card.red { border-right-color: var(--danger); }
+.summary-card.teal { border-right-color: var(--teal); }
 .summary-card .label {
-    font-size: 0.85rem; color: #5d7a8c; font-weight: 600;
+    font-size: 0.82rem; color: var(--text-muted); font-weight: 700;
     display: flex; align-items: center; gap: 6px;
 }
+.summary-card.blue .label i { color: var(--primary); }
+.summary-card.amber .label i { color: var(--warning); }
+.summary-card.green .label i { color: var(--success); }
+.summary-card.red .label i { color: var(--danger); }
+.summary-card.teal .label i { color: var(--teal); }
 .summary-card .value {
-    font-size: 1.8rem; font-weight: 800; color: #0b3b4f;
+    font-size: 1.7rem; font-weight: 800; color: var(--text);
     margin-top: 6px; line-height: 1.1;
     font-variant-numeric: tabular-nums;
 }
 .summary-card .sub {
-    font-size: 0.75rem; color: #5d7a8c; margin-top: 4px;
+    font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;
 }
 
-/* Forms */
+/* ===== Forms ===== */
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 0.9rem;
 }
 .form-field label {
     display: block; font-weight: 700; margin-bottom: 6px;
-    color: #0b3b4f; font-size: 0.85rem;
+    color: var(--primary-dark); font-size: 0.82rem;
 }
 .form-field input, .form-field select, .form-field textarea {
     width: 100%;
     padding: 11px 14px;
-    font-size: 0.95rem;
-    border: 2px solid #cbdbe0;
-    border-radius: 14px;
+    font-size: 0.92rem;
+    border: 2px solid var(--border);
+    border-radius: 12px;
     font-family: inherit;
     background: white;
-    transition: 0.2s;
+    transition: 0.15s;
     font-variant-numeric: tabular-nums;
+    color: var(--text);
 }
 .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
-    border-color: #2196F3;
+    border-color: var(--primary);
     outline: none;
-    box-shadow: 0 0 0 3px rgba(33,150,243,0.15);
+    box-shadow: 0 0 0 3px rgba(21,101,192,0.15);
 }
 .form-field.full { grid-column: 1 / -1; }
-.form-actions {
-    display: flex; gap: 0.8rem; margin-top: 1.2rem;
-    flex-wrap: wrap;
+.form-actions { display: flex; gap: 0.7rem; margin-top: 1.1rem; flex-wrap: wrap; }
+
+/* Remove number arrows */
+input[type=number] { -moz-appearance: textfield; }
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none; margin: 0;
 }
 
-/* Buttons */
+/* ===== Buttons ===== */
 .btn {
     border: none;
-    padding: 11px 22px;
-    border-radius: 14px;
+    padding: 11px 20px;
+    border-radius: 12px;
     font-weight: 700;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     cursor: pointer;
-    transition: 0.2s;
+    transition: 0.15s;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 7px;
     font-family: inherit;
     text-decoration: none;
 }
 .btn:hover { transform: translateY(-1px); }
-.btn-primary { background: linear-gradient(95deg, #0d47a1, #1976d2); color: white; }
-.btn-success { background: linear-gradient(95deg, #1b5e20, #2e7d32); color: white; }
-.btn-danger { background: linear-gradient(95deg, #d32f2f, #b71c1c); color: white; }
-.btn-secondary { background: #eef2f7; color: #0b3b4f; }
-.btn-small { padding: 6px 12px; font-size: 0.8rem; border-radius: 10px; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-dark); }
+.btn-success { background: var(--success); color: white; }
+.btn-success:hover { background: var(--success-dark); }
+.btn-danger { background: var(--danger); color: white; }
+.btn-danger:hover { background: #a01f1f; }
+.btn-secondary { background: var(--bg-soft); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { background: #e2e8f0; }
+.btn-small { padding: 6px 12px; font-size: 0.78rem; border-radius: 9px; }
 
-/* Tables */
+/* ===== Tables ===== */
 .table-wrap {
     overflow-x: auto;
-    border-radius: 16px;
-    border: 1px solid #e6eef5;
+    border-radius: 12px;
+    border: 1px solid var(--border);
 }
 .data-table {
     width: 100%;
@@ -207,7 +299,7 @@ body {
     font-size: 0.85rem;
 }
 .data-table th {
-    background: #1e3a5f;
+    background: var(--primary-dark);
     color: white;
     padding: 10px 8px;
     font-weight: 600;
@@ -216,17 +308,21 @@ body {
 }
 .data-table td {
     padding: 9px 8px;
-    border-bottom: 1px solid #eef2f7;
+    border-bottom: 1px solid var(--border-soft);
     text-align: center;
     font-variant-numeric: tabular-nums;
+    color: var(--text);
 }
 .data-table tr:last-child td { border-bottom: none; }
 .data-table tbody tr:hover { background: #f8fbff; }
 .data-table tr.paid { background: #f0f9f0; }
-.data-table tr.overdue { background: #fff0f0; }
-.data-table tr.total-row { background: #eef2f7; font-weight: 800; }
+.data-table tr.overdue { background: #fff5f5; }
+.data-table tr.total-row { background: var(--bg-soft); font-weight: 800; }
 
-/* Status badges */
+.summary-table td:first-child { text-align: right; font-weight: 700; color: var(--primary-dark); }
+.summary-table td:last-child { color: var(--text-muted); font-size: 0.8rem; }
+
+/* Badges */
 .badge {
     display: inline-block;
     padding: 3px 10px;
@@ -241,61 +337,60 @@ body {
 /* Device cards */
 .device-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
     gap: 1rem;
 }
 .device-card {
     background: white;
-    border-radius: 22px;
-    padding: 1.2rem;
-    box-shadow: 0 6px 20px -6px rgba(0,0,0,0.1);
-    border-top: 5px solid #1976d2;
-    transition: 0.2s;
+    border-radius: 18px;
+    padding: 1.1rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--primary);
+    transition: 0.15s;
 }
-.device-card:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -6px rgba(0,0,0,0.15); }
-.device-card.overdue { border-top-color: #d32f2f; }
-.device-card.complete { border-top-color: #1b5e20; }
+.device-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+.device-card.overdue { border-top-color: var(--danger); }
+.device-card.complete { border-top-color: var(--success); }
 .device-card h4 {
-    color: #0b3b4f; font-size: 1.05rem; margin-bottom: 4px;
+    color: var(--primary-dark); font-size: 1rem; margin-bottom: 4px;
     display: flex; align-items: center; gap: 6px;
 }
-.device-card .supplier { font-size: 0.8rem; color: #5d7a8c; margin-bottom: 10px; }
+.device-card .supplier { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 10px; }
 .device-card .info-row {
     display: flex; justify-content: space-between;
-    font-size: 0.85rem; padding: 4px 0;
-    border-bottom: 1px dashed #eef2f7;
+    font-size: 0.82rem; padding: 4px 0;
+    border-bottom: 1px dashed var(--border-soft);
 }
 .device-card .info-row:last-child { border-bottom: none; }
-.device-card .info-row span:first-child { color: #5d7a8c; }
-.device-card .info-row span:last-child { font-weight: 700; color: #0b3b4f; font-variant-numeric: tabular-nums; }
+.device-card .info-row span:first-child { color: var(--text-muted); }
+.device-card .info-row span:last-child { font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
 .progress-bar {
     height: 8px;
-    background: #eef2f7;
+    background: var(--bg-soft);
     border-radius: 10px;
     overflow: hidden;
     margin: 10px 0 6px;
 }
 .progress-bar > div {
     height: 100%;
-    background: linear-gradient(90deg, #1b5e20, #2e7d32);
+    background: var(--success);
     transition: width 0.4s;
 }
 .device-card .progress-info {
-    font-size: 0.75rem; color: #5d7a8c;
+    font-size: 0.72rem; color: var(--text-muted);
     display: flex; justify-content: space-between;
 }
-.device-card .card-actions {
-    display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap;
-}
+.device-card .card-actions { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
 
 /* Empty state */
 .empty-state {
-    text-align: center; padding: 3rem 1rem; color: #7a93a5;
+    text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);
 }
-.empty-state i { font-size: 3rem; margin-bottom: 1rem; opacity: 0.4; }
-.empty-state p { font-size: 0.95rem; }
+.empty-state i { font-size: 2.8rem; margin-bottom: 0.8rem; opacity: 0.3; }
+.empty-state p { font-size: 0.9rem; }
 
-/* Device search list */
+/* Search results */
 .search-results {
     max-height: 320px;
     overflow-y: auto;
@@ -303,8 +398,8 @@ body {
 }
 .device-search-item {
     padding: 10px 14px;
-    border-radius: 12px;
-    background: #f8fafd;
+    border-radius: 10px;
+    background: var(--bg-soft);
     margin-bottom: 6px;
     cursor: pointer;
     transition: 0.15s;
@@ -312,15 +407,15 @@ body {
     gap: 10px;
     border: 2px solid transparent;
 }
-.device-search-item:hover { background: #e8f2ff; border-color: #1976d2; }
-.device-search-item .name { font-weight: 700; color: #0b3b4f; font-size: 0.9rem; }
-.device-search-item .meta { font-size: 0.75rem; color: #5d7a8c; }
+.device-search-item:hover { background: #e8f2ff; border-color: var(--primary); }
+.device-search-item .name { font-weight: 700; color: var(--primary-dark); font-size: 0.88rem; }
+.device-search-item .meta { font-size: 0.72rem; color: var(--text-muted); }
 
 /* Modal */
 .modal-overlay {
     display: none;
     position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.5);
+    background: rgba(15,23,42,0.55);
     z-index: 3000;
     align-items: center; justify-content: center;
     padding: 1rem;
@@ -328,91 +423,125 @@ body {
 .modal-overlay.show { display: flex; }
 .modal {
     background: white;
-    border-radius: 24px;
-    padding: 1.5rem;
+    border-radius: 20px;
+    padding: 1.4rem;
     max-width: 420px;
     width: 100%;
     box-shadow: 0 20px 60px -10px rgba(0,0,0,0.4);
+    animation: pop 0.2s ease;
 }
+@keyframes pop { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 .modal h3 {
-    color: #0b3b4f; font-size: 1.1rem; margin-bottom: 0.8rem;
-    padding-bottom: 0.6rem; border-bottom: 2px solid #eef2f7;
+    color: var(--primary-dark); font-size: 1.05rem; margin-bottom: 0.8rem;
+    padding-bottom: 0.6rem; border-bottom: 2px solid var(--border-soft);
+    display: flex; align-items: center; gap: 8px;
 }
-.modal .info { font-size: 0.85rem; color: #4a6b7f; margin-bottom: 1rem; line-height: 1.6; }
-.modal label { display: block; font-weight: 700; margin-bottom: 6px; font-size: 0.85rem; color: #0b3b4f; }
-.modal input {
-    width: 100%; padding: 10px 14px; font-size: 0.95rem;
-    border: 2px solid #cbdbe0; border-radius: 12px;
+.modal .info { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.6; }
+.modal label { display: block; font-weight: 700; margin-bottom: 6px; font-size: 0.82rem; color: var(--primary-dark); }
+.modal input[type=date] {
+    width: 100%; padding: 10px 14px; font-size: 0.92rem;
+    border: 2px solid var(--border); border-radius: 10px;
     font-family: inherit; margin-bottom: 1rem;
 }
-.modal-buttons { display: flex; gap: 0.6rem; justify-content: flex-end; }
+.modal-buttons { display: flex; gap: 0.6rem; justify-content: flex-end; flex-wrap: wrap; }
 
 /* Toast */
 .toast {
     position: fixed; bottom: 30px; left: 50%;
     transform: translateX(-50%);
-    padding: 12px 24px;
-    border-radius: 40px;
+    padding: 12px 22px;
+    border-radius: 30px;
     font-weight: 700;
     z-index: 4000;
     box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     color: white;
     animation: slideUp 0.3s ease;
     max-width: 90vw;
     text-align: center;
 }
-.toast.success { background: #1b5e20; }
-.toast.error { background: #d32f2f; }
-.toast.info { background: #0d47a1; }
+.toast.success { background: var(--success); }
+.toast.error { background: var(--danger); }
+.toast.info { background: var(--primary); }
 @keyframes slideUp { from { bottom: 0; opacity: 0; } to { bottom: 30px; opacity: 1; } }
 
-/* Signature card */
+/* Signature card - floating, red border, blue text */
 .signature-card {
     position: fixed;
     bottom: 20px; left: 20px;
-    background: #f9f9fc;
-    padding: 6px 12px;
+    background: #ffffff;
+    padding: 8px 14px;
     border-radius: 32px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
     font-family: 'Segoe UI', Tahoma, sans-serif;
     font-size: 0.65rem;
     z-index: 1000;
     text-decoration: none;
-    color: #1f2f3a;
+    color: var(--primary);
     display: inline-flex;
     flex-direction: column;
     line-height: 1.3;
     text-align: center;
-    border: 1px solid rgba(0,0,0,0.05);
+    border: 2px solid var(--danger);
     transition: 0.2s;
 }
-.signature-card:hover { transform: scale(1.02); box-shadow: 0 4px 12px rgba(0,0,0,0.15); background: #fff; }
-.signature-card .name { font-size: 0.7rem; font-weight: 700; }
-.signature-card .title { font-size: 0.55rem; opacity: 0.8; }
+.signature-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 6px 20px rgba(198,40,40,0.3);
+}
+.signature-card .name {
+    font-size: 0.7rem; font-weight: 700;
+    color: var(--primary); margin-bottom: 2px;
+}
+.signature-card .title {
+    font-size: 0.55rem; font-weight: 500;
+    color: var(--primary); opacity: 0.85;
+}
+
+/* Preview box */
+.calc-preview {
+    margin-top: 1.1rem;
+    padding: 1rem;
+    background: #f0f8ff;
+    border-radius: 14px;
+    border: 1px solid #cce0ff;
+    display: none;
+}
+.calc-preview h4 {
+    color: var(--primary-dark); margin-bottom: 8px; font-size: 0.92rem;
+    display: flex; align-items: center; gap: 6px;
+}
+.calc-preview .preview-content { font-size: 0.88rem; line-height: 1.9; color: var(--text); }
 
 /* Responsive */
 @media (max-width: 768px) {
-    body { padding: 1rem 0.6rem 3rem; }
-    .clinic-header { padding: 0.9rem 1rem; border-radius: 24px; }
-    .clinic-title h2 { font-size: 1.3rem; }
-    .logo-area img { height: 50px; }
-    .summary-card .value { font-size: 1.4rem; }
-    .tab { padding: 9px 14px; font-size: 0.8rem; }
-    .card { padding: 1rem; border-radius: 20px; }
+    body { padding: 0.8rem 0.6rem 5rem; }
+    .clinic-header { padding: 0.8rem 1rem; border-radius: 18px; }
+    .clinic-title h2 { font-size: 1.15rem; }
+    .clinic-title p { font-size: 0.72rem; }
+    .logo-area img { height: 45px; }
+    .year-badge { font-size: 0.75rem; padding: 0.3rem 0.7rem; }
+    .summary-card .value { font-size: 1.35rem; }
+    .tab { padding: 9px 12px; font-size: 0.78rem; }
+    .card { padding: 0.9rem; border-radius: 16px; }
     .data-table { font-size: 0.72rem; }
     .data-table th, .data-table td { padding: 6px 4px; }
-    .signature-card { position: relative; bottom: auto; left: auto; margin: 20px auto 0; display: inline-flex; }
+    .backup-bar { padding: 0.7rem; }
+    .btn-backup, .btn-restore { padding: 11px 16px; font-size: 0.85rem; }
+    .signature-card {
+        bottom: 10px; left: 10px;
+        padding: 6px 10px; font-size: 0.55rem;
+    }
+    .signature-card .name { font-size: 0.6rem; }
+    .signature-card .title { font-size: 0.48rem; }
 }
-
-/* PDF helper */
-.pdf-mode .card, .pdf-mode .device-card { box-shadow: none; border: 1px solid #e6eef5; }
 </style>
 </head>
 <body>
 
 <div class="wrapper">
 
+    <!-- Header -->
     <div class="clinic-header">
         <div class="logo-area">
             <img src="https://i.postimg.cc/ZK4kBD7D/klynk.jpg" alt="كلينك شانزليزيه" onerror="this.src='https://placehold.co/80x80?text=KLYNK'">
@@ -426,6 +555,24 @@ body {
         </div>
     </div>
 
+    <!-- Backup Bar (أعلى الصفحة) -->
+    <div class="backup-bar">
+        <div class="backup-info">
+            <i class="fas fa-shield-alt"></i>
+            <span>حافظ على بياناتك - خذ نسخة احتياطية بشكل دوري</span>
+        </div>
+        <div class="backup-actions">
+            <button class="btn-backup" onclick="exportDataJSON()">
+                <i class="fas fa-save"></i> أخذ نسخة احتياطية
+            </button>
+            <label class="btn-restore" style="cursor:pointer;">
+                <i class="fas fa-folder-open"></i> استعادة من ملف
+                <input type="file" accept=".json" onchange="importDataJSON(event)" style="display:none;">
+            </label>
+        </div>
+    </div>
+
+    <!-- Tabs -->
     <nav class="tabs" id="mainTabs">
         <button class="tab active" data-tab="dashboard"><i class="fas fa-home"></i> لوحة التحكم</button>
         <button class="tab" data-tab="add"><i class="fas fa-plus-circle"></i> إضافة جهاز</button>
@@ -437,23 +584,31 @@ body {
     <!-- ===== DASHBOARD ===== -->
     <section id="tab-dashboard" class="tab-content active">
         <div class="summary-grid" id="dashboardSummary"></div>
+
+        <div class="card">
+            <h3><i class="fas fa-table"></i> ملخص الإجماليات</h3>
+            <div class="table-wrap">
+                <table class="data-table summary-table">
+                    <thead>
+                        <tr>
+                            <th>البيان</th>
+                            <th>القيمة (د.ك)</th>
+                            <th>التفاصيل</th>
+                        </tr>
+                    </thead>
+                    <tbody id="summaryTotalsBody"></tbody>
+                </table>
+            </div>
+        </div>
+
         <div class="card">
             <h3><i class="fas fa-bell"></i> الدفعات القادمة (خلال 30 يوم)</h3>
             <div id="upcomingPayments"></div>
         </div>
+
         <div class="card">
-            <h3><i class="fas fa-exclamation-triangle" style="color:#d32f2f;"></i> الدفعات المتأخرة</h3>
+            <h3><i class="fas fa-exclamation-triangle" style="color:var(--danger);"></i> الدفعات المتأخرة</h3>
             <div id="overduePayments"></div>
-        </div>
-        <div class="card">
-            <h3><i class="fas fa-database"></i> إدارة البيانات</h3>
-            <div class="form-actions">
-                <button class="btn btn-secondary" onclick="exportDataJSON()"><i class="fas fa-download"></i> تصدير نسخة احتياطية (JSON)</button>
-                <label class="btn btn-secondary" style="cursor:pointer;">
-                    <i class="fas fa-upload"></i> استيراد نسخة احتياطية
-                    <input type="file" accept=".json" onchange="importDataJSON(event)" style="display:none;">
-                </label>
-            </div>
         </div>
     </section>
 
@@ -485,7 +640,7 @@ body {
                     </div>
                     <div class="form-field">
                         <label for="downPayment"><i class="fas fa-hand-holding-usd"></i> الدفعة المقدمة (د.ك)</label>
-                        <input type="number" id="downPayment" step="any" min="0" placeholder="0.000" value="0">
+                        <input type="number" id="downPayment" step="any" min="0" placeholder="0.000">
                     </div>
                     <div class="form-field">
                         <label for="installmentsCount"><i class="fas fa-layer-group"></i> عدد الأقساط *</label>
@@ -501,9 +656,9 @@ body {
                     </div>
                 </div>
 
-                <div id="calcPreview" style="margin-top:1.2rem; padding:1rem; background:#f0f8ff; border-radius:16px; display:none;">
-                    <h4 style="color:#0d47a1; margin-bottom:8px; font-size:0.95rem;"><i class="fas fa-calculator"></i> معاينة الحساب</h4>
-                    <div id="calcPreviewContent" style="font-size:0.9rem; line-height:1.8;"></div>
+                <div id="calcPreview" class="calc-preview">
+                    <h4><i class="fas fa-calculator"></i> معاينة الحساب</h4>
+                    <div id="calcPreviewContent" class="preview-content"></div>
                 </div>
 
                 <div class="form-actions">
@@ -519,7 +674,7 @@ body {
         <div class="card">
             <h3><i class="fas fa-list"></i> الأجهزة المسجّلة</h3>
             <div style="margin-bottom:1rem;">
-                <input type="text" id="deviceFilter" placeholder="🔍 ابحث باسم الجهاز أو رقم العقد أو المورد..." style="width:100%; padding:12px 16px; border:2px solid #cbdbe0; border-radius:14px; font-family:inherit; font-size:0.95rem;" oninput="renderDevices()">
+                <input type="text" id="deviceFilter" placeholder="🔍 ابحث باسم الجهاز أو رقم العقد أو المورد..." style="width:100%; padding:11px 14px; border:2px solid var(--border); border-radius:12px; font-family:inherit; font-size:0.92rem;" oninput="renderDevices()">
             </div>
             <div class="device-grid" id="devicesGrid"></div>
         </div>
@@ -572,7 +727,24 @@ body {
         <input type="date" id="paymentDateInput">
         <div class="modal-buttons">
             <button class="btn btn-secondary" onclick="closePaymentModal()">إلغاء</button>
-            <button class="btn btn-success" onclick="confirmPayment()">تأكيد الدفع</button>
+            <button class="btn btn-success" onclick="confirmPayment()"><i class="fas fa-check"></i> تأكيد الدفع</button>
+        </div>
+    </div>
+</div>
+
+<!-- Backup Reminder Modal -->
+<div id="backupReminderModal" class="modal-overlay">
+    <div class="modal" style="text-align:center;">
+        <div style="font-size:3rem; color:var(--warning); margin-bottom:0.5rem;">
+            <i class="fas fa-bell"></i>
+        </div>
+        <h3 style="justify-content:center; border-bottom:none; color:var(--primary-dark);">⏰ تذكير بالنسخ الاحتياطي</h3>
+        <p style="font-size:0.9rem; color:var(--text-muted); margin:0.8rem 0 1.2rem; line-height:1.6;">
+            مرت نصف ساعة منذ آخر تذكير. ننصحك بأخذ نسخة احتياطية من بياناتك الآن لضمان عدم فقدانها.
+        </p>
+        <div class="modal-buttons" style="justify-content:center; gap:0.8rem;">
+            <button class="btn btn-secondary" onclick="dismissReminder()"><i class="fas fa-clock"></i> تجاهل</button>
+            <button class="btn btn-success" onclick="backupFromReminder()"><i class="fas fa-save"></i> أخذ نسخة الآن</button>
         </div>
     </div>
 </div>
@@ -704,6 +876,59 @@ function showToast(message, type = 'info') {
 }
 
 /* ============================================================
+   BACKUP REMINDER
+   ============================================================ */
+let backupTimer = null;
+
+function startBackupTimer() {
+    if (backupTimer) clearInterval(backupTimer);
+    backupTimer = setInterval(showBackupReminder, 30 * 60 * 1000);
+}
+
+function showBackupReminder() {
+    // Don't show if another modal is open
+    if (document.querySelector('.modal-overlay.show')) return;
+    document.getElementById('backupReminderModal').classList.add('show');
+}
+
+function dismissReminder() {
+    document.getElementById('backupReminderModal').classList.remove('show');
+}
+
+function backupFromReminder() {
+    document.getElementById('backupReminderModal').classList.remove('show');
+    exportDataJSON();
+}
+
+/* ============================================================
+   ENTER KEY NAVIGATION
+   ============================================================ */
+document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Enter') return;
+    const target = e.target;
+    if (!target.matches('input:not([type="hidden"]):not([type="file"]), select')) return;
+    const form = target.closest('form') || target.closest('.modal');
+    if (!form) return;
+    const fields = Array.from(form.querySelectorAll('input:not([type="hidden"]):not([type="file"]), select, textarea'));
+    const visibleFields = fields.filter(el => el.offsetParent !== null && !el.disabled);
+    const idx = visibleFields.indexOf(target);
+    if (idx >= 0 && idx < visibleFields.length - 1) {
+        e.preventDefault();
+        visibleFields[idx + 1].focus();
+    }
+});
+
+/* ============================================================
+   MODAL OVERLAY CLICK
+   ============================================================ */
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('show');
+        if (e.target.id === 'paymentModal') pendingPayment = null;
+    }
+});
+
+/* ============================================================
    TAB NAVIGATION
    ============================================================ */
 document.getElementById('mainTabs').addEventListener('click', e => {
@@ -722,25 +947,42 @@ document.getElementById('mainTabs').addEventListener('click', e => {
    ============================================================ */
 function renderDashboard() {
     const data = Data.load();
-    let totalValue = 0, totalPaid = 0, totalRemaining = 0;
+    let totalValue = 0, totalDownPayments = 0, totalInstallmentsPaid = 0, totalRemaining = 0;
     let totalDevices = data.devices.length;
     let completedDevices = 0;
+    let totalPaidCount = 0, totalRemainingCount = 0;
     let overdueCount = 0;
+
     const today = new Date(); today.setHours(0,0,0,0);
     const in30 = new Date(today); in30.setDate(in30.getDate() + 30);
+
+    // Next month range
+    const nextMonthStart = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+    const nextMonthEnd = new Date(today.getFullYear(), today.getMonth() + 2, 0, 23, 59, 59);
+    let nextMonthTotal = 0;
+    let nextMonthCount = 0;
+
     const upcomingList = [];
     const overdueList = [];
 
     data.devices.forEach(d => {
         const status = getDeviceStatus(d);
         totalValue += Number(d.totalPrice);
-        totalPaid += status.totalPaid;
+        totalDownPayments += Number(d.downPayment || 0);
+        totalInstallmentsPaid += status.paidAmount;
         totalRemaining += status.remaining;
+        totalPaidCount += status.paidCount;
+        totalRemainingCount += status.remainingCount;
         if (status.remaining <= 0.001) completedDevices++;
         status.schedule.forEach(inst => {
             const isPaid = status.payments[inst.number] !== undefined && status.payments[inst.number] !== '';
             if (isPaid) return;
             const due = new Date(inst.dueDate); due.setHours(0,0,0,0);
+            // Next month
+            if (due >= nextMonthStart && due <= nextMonthEnd) {
+                nextMonthTotal += inst.amount;
+                nextMonthCount++;
+            }
             if (due < today) {
                 overdueList.push({ device: d, inst });
                 overdueCount++;
@@ -750,27 +992,59 @@ function renderDashboard() {
         });
     });
 
+    const totalPayments = totalDownPayments + totalInstallmentsPaid;
+
+    // Summary cards
     document.getElementById('dashboardSummary').innerHTML = `
-        <div class="summary-card">
+        <div class="summary-card blue">
             <div class="label"><i class="fas fa-microscope"></i> عدد الأجهزة</div>
             <div class="value">${totalDevices}</div>
             <div class="sub">مكتملة السداد: ${completedDevices}</div>
         </div>
-        <div class="summary-card gold">
+        <div class="summary-card amber">
             <div class="label"><i class="fas fa-coins"></i> إجمالي قيمة الأجهزة</div>
             <div class="value">${formatMoney(totalValue)}</div>
             <div class="sub">د.ك</div>
         </div>
         <div class="summary-card green">
             <div class="label"><i class="fas fa-check-circle"></i> إجمالي المسدّد</div>
-            <div class="value">${formatMoney(totalPaid)}</div>
+            <div class="value">${formatMoney(totalPayments)}</div>
             <div class="sub">د.ك</div>
         </div>
         <div class="summary-card red">
-            <div class="label"><i class="fas fa-hourglass-half"></i> المتبقي</div>
+            <div class="label"><i class="fas fa-hourglass-half"></i> إجمالي المتبقي</div>
             <div class="value">${formatMoney(totalRemaining)}</div>
             <div class="sub">د.ك ${overdueCount > 0 ? '· متأخر: ' + overdueCount : ''}</div>
         </div>
+        <div class="summary-card teal">
+            <div class="label"><i class="fas fa-calendar-check"></i> مستحقّات الشهر التالي</div>
+            <div class="value">${formatMoney(nextMonthTotal)}</div>
+            <div class="sub">د.ك · ${nextMonthCount} قسط</div>
+        </div>
+    `;
+
+    // Summary totals table
+    document.getElementById('summaryTotalsBody').innerHTML = `
+        <tr>
+            <td>إجمالي قيم الأجهزة</td>
+            <td>${formatMoney(totalValue)}</td>
+            <td>${totalDevices} جهاز</td>
+        </tr>
+        <tr>
+            <td>إجمالي الدفعات (مقدم + أقساط)</td>
+            <td>${formatMoney(totalPayments)}</td>
+            <td>مقدم: ${formatMoney(totalDownPayments)} · أقساط: ${formatMoney(totalInstallmentsPaid)}</td>
+        </tr>
+        <tr>
+            <td>إجمالي الأقساط المدفوعة</td>
+            <td>${formatMoney(totalInstallmentsPaid)}</td>
+            <td>${totalPaidCount} قسط مدفوع</td>
+        </tr>
+        <tr>
+            <td>إجمالي المتبقي</td>
+            <td>${formatMoney(totalRemaining)}</td>
+            <td>${totalRemainingCount} قسط متبقٍ</td>
+        </tr>
     `;
 
     const upcomingContainer = document.getElementById('upcomingPayments');
@@ -837,7 +1111,7 @@ function updateCalcPreview() {
     if (total <= 0 || count <= 0) { preview.style.display = 'none'; return; }
     const remaining = total - down;
     if (remaining < 0) {
-        content.innerHTML = `<span style="color:#d32f2f;">⚠️ الدفعة المقدمة أكبر من إجمالي القيمة</span>`;
+        content.innerHTML = `<span style="color:var(--danger);">⚠️ الدفعة المقدمة أكبر من إجمالي القيمة</span>`;
         preview.style.display = 'block';
         return;
     }
@@ -846,7 +1120,7 @@ function updateCalcPreview() {
         <div>إجمالي القيمة: <strong>${formatMoney(total)} د.ك</strong></div>
         <div>الدفعة المقدمة: <strong>${formatMoney(down)} د.ك</strong></div>
         <div>المتبقي على الأقساط: <strong>${formatMoney(remaining)} د.ك</strong></div>
-        <div>القسط الشهري التقريبي: <strong style="color:#0d47a1; font-size:1.05rem;">${formatMoney(monthly)} د.ك</strong> × ${count} قسط</div>
+        <div>القسط الشهري التقريبي: <strong style="color:var(--primary-dark); font-size:1.05rem;">${formatMoney(monthly)} د.ك</strong> × ${count} قسط</div>
     `;
     preview.style.display = 'block';
 }
@@ -913,8 +1187,8 @@ function renderDevices() {
                 <h4><i class="fas fa-microscope"></i> ${escapeHtml(d.deviceName)}</h4>
                 <div class="supplier">${escapeHtml(d.supplier || '—')} ${d.contractNumber ? '· ' + escapeHtml(d.contractNumber) : ''}</div>
                 <div class="info-row"><span>إجمالي القيمة</span><span>${formatMoney(d.totalPrice)} د.ك</span></div>
-                <div class="info-row"><span>المدفوع</span><span style="color:#1b5e20;">${formatMoney(s.totalPaid)} د.ك</span></div>
-                <div class="info-row"><span>المتبقي</span><span style="color:#d32f2f;">${formatMoney(s.remaining)} د.ك</span></div>
+                <div class="info-row"><span>المدفوع</span><span style="color:var(--success);">${formatMoney(s.totalPaid)} د.ك</span></div>
+                <div class="info-row"><span>المتبقي</span><span style="color:var(--danger);">${formatMoney(s.remaining)} د.ك</span></div>
                 <div class="info-row"><span>الأقساط</span><span>${s.paidCount} / ${s.totalInstallments}</span></div>
                 <div class="progress-bar"><div style="width:${Math.min(100, s.progress).toFixed(1)}%"></div></div>
                 <div class="progress-info">
@@ -1019,13 +1293,11 @@ function generateReport() {
     if (from > to) { showToast('تاريخ البداية يجب أن يكون قبل النهاية', 'error'); return; }
     const data = Data.load();
 
-    // Contracts in period
     const contractsInPeriod = data.devices.filter(d => {
         const cd = new Date(d.contractDate);
         return cd >= from && cd <= to;
     });
 
-    // Payments in period
     const paymentsInPeriod = [];
     data.devices.forEach(d => {
         const status = getDeviceStatus(d);
@@ -1033,9 +1305,7 @@ function generateReport() {
             const payDate = status.payments[inst.number];
             if (!payDate) return;
             const pd = new Date(payDate);
-            if (pd >= from && pd <= to) {
-                paymentsInPeriod.push({ device: d, inst, paidDate: pd });
-            }
+            if (pd >= from && pd <= to) paymentsInPeriod.push({ device: d, inst, paidDate: pd });
         });
     });
 
@@ -1048,7 +1318,7 @@ function generateReport() {
         <div class="card">
             <h3><i class="fas fa-file-alt"></i> التقرير من ${formatDate(from)} إلى ${formatDate(to)}</h3>
             <div class="summary-grid">
-                <div class="summary-card gold">
+                <div class="summary-card amber">
                     <div class="label"><i class="fas fa-file-signature"></i> عقود جديدة</div>
                     <div class="value">${contractsInPeriod.length}</div>
                     <div class="sub">بقيمة ${formatMoney(totalContractsValue)} د.ك</div>
@@ -1058,12 +1328,12 @@ function generateReport() {
                     <div class="value">${formatMoney(totalDownPayments)}</div>
                     <div class="sub">د.ك (عقود الفترة)</div>
                 </div>
-                <div class="summary-card">
+                <div class="summary-card blue">
                     <div class="label"><i class="fas fa-money-bill-wave"></i> دفعات أقساط محصّلة</div>
                     <div class="value">${paymentsInPeriod.length}</div>
                     <div class="sub">بقيمة ${formatMoney(totalPaymentsValue)} د.ك</div>
                 </div>
-                <div class="summary-card red">
+                <div class="summary-card teal">
                     <div class="label"><i class="fas fa-coins"></i> إجمالي الحركة</div>
                     <div class="value">${formatMoney(totalDownPayments + totalPaymentsValue)}</div>
                     <div class="sub">د.ك</div>
@@ -1126,7 +1396,7 @@ function renderStatementSearch() {
     if (q) matches = matches.filter(d => d.deviceName.toLowerCase().includes(q) || (d.contractNumber||'').toLowerCase().includes(q));
     const box = document.getElementById('statementSearchResults');
     if (matches.length === 0) {
-        box.innerHTML = `<div class="empty-state" style="padding:1rem;"><p>لا توجد نتائج مطابقة</p></div>`;
+        box.innerHTML = `<div class="empty-state" style="padding:1rem;"><p>${q ? 'لا توجد نتائج مطابقة' : 'لا توجد أجهزة مسجّلة'}</p></div>`;
         return;
     }
     box.innerHTML = matches.map(d => {
@@ -1137,8 +1407,8 @@ function renderStatementSearch() {
                 <div class="meta">${escapeHtml(d.supplier||'—')} ${d.contractNumber?'· '+escapeHtml(d.contractNumber):''}</div>
             </div>
             <div style="text-align:left; font-size:0.8rem;">
-                <div style="color:#d32f2f; font-weight:700;">${formatMoney(s.remaining)} د.ك</div>
-                <div style="color:#5d7a8c; font-size:0.72rem;">متبقي</div>
+                <div style="color:var(--danger); font-weight:700;">${formatMoney(s.remaining)} د.ك</div>
+                <div style="color:var(--text-muted); font-size:0.7rem;">متبقي</div>
             </div>
         </div>`;
     }).join('');
@@ -1157,31 +1427,39 @@ function renderStatement() {
     if (!device) return;
     const status = getDeviceStatus(device);
 
+    // Default period: from Jan 1 of current year to today
+    const today = new Date();
+    const defaultFrom = `${today.getFullYear()}-01-01`;
+    const defaultTo = formatDateInput(today);
+    const fromDate = new Date(defaultFrom); fromDate.setHours(0,0,0,0);
+    const toDate = new Date(defaultTo); toDate.setHours(23,59,59,999);
+    const tableHTML = renderStatementTable(device, status, fromDate, toDate);
+
     const out = document.getElementById('statementOutput');
     out.innerHTML = `
         <div class="card">
             <h3><i class="fas fa-file-invoice"></i> كشف حساب: ${escapeHtml(device.deviceName)}</h3>
             <div class="form-grid" style="margin-bottom:1rem;">
                 <div class="form-field">
-                    <label><i class="fas fa-calendar-alt"></i> من تاريخ (اختياري)</label>
-                    <input type="date" id="stmtFrom" value="">
+                    <label><i class="fas fa-calendar-alt"></i> من تاريخ</label>
+                    <input type="date" id="stmtFrom" value="${defaultFrom}">
                 </div>
                 <div class="form-field">
-                    <label><i class="fas fa-calendar-alt"></i> إلى تاريخ (اختياري)</label>
-                    <input type="date" id="stmtTo" value="">
+                    <label><i class="fas fa-calendar-alt"></i> إلى تاريخ</label>
+                    <input type="date" id="stmtTo" value="${defaultTo}">
                 </div>
                 <div class="form-field" style="align-self:end;">
-                    <button class="btn btn-secondary" onclick="renderStatement()" style="width:100%;"><i class="fas fa-filter"></i> تطبيق الفلتر</button>
+                    <button class="btn btn-secondary" onclick="applyStmtFilter()" style="width:100%;"><i class="fas fa-filter"></i> تطبيق الفلتر</button>
                 </div>
             </div>
 
             <div class="summary-grid" style="margin-bottom:1rem;">
-                <div class="summary-card">
+                <div class="summary-card amber">
                     <div class="label">إجمالي القيمة</div>
                     <div class="value">${formatMoney(device.totalPrice)}</div>
                     <div class="sub">د.ك</div>
                 </div>
-                <div class="summary-card gold">
+                <div class="summary-card blue">
                     <div class="label">الدفعة المقدمة</div>
                     <div class="value">${formatMoney(device.downPayment||0)}</div>
                     <div class="sub">د.ك</div>
@@ -1198,7 +1476,7 @@ function renderStatement() {
                 </div>
             </div>
 
-            <div class="form-grid" style="margin-bottom:1rem; font-size:0.85rem;">
+            <div class="form-grid" style="margin-bottom:1rem; font-size:0.85rem; gap:0.6rem;">
                 <div><strong>المورد:</strong> ${escapeHtml(device.supplier||'—')}</div>
                 <div><strong>رقم العقد:</strong> ${escapeHtml(device.contractNumber||'—')}</div>
                 <div><strong>تاريخ العقد:</strong> ${formatDate(device.contractDate)}</div>
@@ -1208,24 +1486,25 @@ function renderStatement() {
                 ${device.notes ? `<div style="grid-column:1/-1;"><strong>ملاحظات:</strong> ${escapeHtml(device.notes)}</div>` : ''}
             </div>
 
-            <div id="stmtTableContainer">${renderStatementTable(device, status, null, null)}</div>
+            <div id="stmtTableContainer">${tableHTML}</div>
 
             <div class="form-actions">
                 <button class="btn btn-danger" onclick="exportStatementPDF()"><i class="fas fa-file-pdf"></i> تصدير كشف الحساب PDF</button>
             </div>
         </div>
     `;
-
-    // Bind optional filter inside statement
-    document.getElementById('stmtFrom').addEventListener('change', () => applyStmtFilter(device, status));
-    document.getElementById('stmtTo').addEventListener('change', () => applyStmtFilter(device, status));
 }
 
-function applyStmtFilter(device, status) {
+function applyStmtFilter() {
+    if (!currentStatementDeviceId) return;
+    const data = Data.load();
+    const device = data.devices.find(d => d.id === currentStatementDeviceId);
+    if (!device) return;
+    const status = getDeviceStatus(device);
     const fromVal = document.getElementById('stmtFrom').value;
     const toVal = document.getElementById('stmtTo').value;
-    const from = fromVal ? new Date(fromVal) : null;
-    const to = toVal ? new Date(toVal) : null;
+    let from = fromVal ? new Date(fromVal) : null;
+    let to = toVal ? new Date(toVal) : null;
     if (from) from.setHours(0,0,0,0);
     if (to) to.setHours(23,59,59,999);
     document.getElementById('stmtTableContainer').innerHTML = renderStatementTable(device, status, from, to);
@@ -1264,7 +1543,7 @@ function renderStatementTable(device, status, from, to) {
             <td>${action}</td>
         </tr>`;
     });
-    html += `<tr class="total-row"><td colspan="2">إجمالي المعروض</td><td>${formatMoney(totalFiltered)}</td><td colspan="3">مدفوع منها: ${formatMoney(totalPaidFiltered)}</td></tr>`;
+    html += `<tr class="total-row"><td colspan="2">إجمالي المعروض</td><td>${formatMoney(totalFiltered)}</td><td colspan="3">مدفوع: ${formatMoney(totalPaidFiltered)}</td></tr>`;
     html += `</tbody></table></div>`;
     return html;
 }
@@ -1315,8 +1594,8 @@ async function exportStatementPDF() {
     pageDiv.innerHTML = `
         <div style="text-align:center; margin-bottom:8px;">
             <img src="https://i.postimg.cc/ZK4kBD7D/klynk.jpg" style="height:50px; border-radius:12px;">
-            <h2 style="color:#1e3a5f; margin:4px 0; font-size:1.2rem;">كلينك شانزليزيه</h2>
-            <p style="color:#2c6e2c; font-weight:bold; font-size:0.75rem; margin:0;">نظام إدارة أقساط الأجهزة الطبية</p>
+            <h2 style="color:#0d47a1; margin:4px 0; font-size:1.2rem;">كلينك شانزليزيه</h2>
+            <p style="color:#2e7d32; font-weight:bold; font-size:0.75rem; margin:0;">نظام إدارة أقساط الأجهزة الطبية</p>
             <hr style="margin:6px 0;">
             <h3 style="color:#0d47a1; margin:4px 0; font-size:1rem;">كشف حساب جهاز: ${escapeHtml(device.deviceName)}</h3>
         </div>
@@ -1326,7 +1605,7 @@ async function exportStatementPDF() {
             <div><strong>إجمالي القيمة:</strong> ${formatMoney(device.totalPrice)} د.ك &nbsp;·&nbsp; <strong>الدفعة المقدمة:</strong> ${formatMoney(device.downPayment||0)} د.ك</div>
             <div><strong>عدد الأقساط:</strong> ${device.installmentsCount} &nbsp;·&nbsp; <strong>المدفوع منها:</strong> ${status.paidCount} &nbsp;·&nbsp; <strong>المتبقي:</strong> ${status.remainingCount}</div>
         </div>
-        <h4 style="background:#1976d2; color:white; padding:3px; border-radius:5px; text-align:center; font-size:0.8rem; margin:4px 0;">جدول الأقساط</h4>
+        <h4 style="background:#1565c0; color:white; padding:3px; border-radius:5px; text-align:center; font-size:0.8rem; margin:4px 0;">جدول الأقساط</h4>
         <table style="width:100%; border-collapse:collapse; font-size:0.7rem;">
             <thead>
                 <tr style="background:#0d47a1; color:white;">
@@ -1339,12 +1618,12 @@ async function exportStatementPDF() {
             </thead>
             <tbody>${scheduleRows}</tbody>
         </table>
-        <div style="margin-top:8px; font-size:0.8rem; display:flex; justify-content:space-between; background:#eef5ff; padding:6px; border-radius:6px;">
+        <div style="margin-top:8px; font-size:0.8rem; display:flex; justify-content:space-between; background:#f5f7fa; padding:6px; border-radius:6px;">
             <div><strong>إجمالي المسدّد:</strong> ${formatMoney(status.totalPaid)} د.ك</div>
             <div><strong>المتبقي:</strong> ${formatMoney(status.remaining)} د.ك</div>
             <div><strong>نسبة السداد:</strong> ${status.progress.toFixed(1)}%</div>
         </div>
-        <div style="margin-top:18px; font-size:0.7rem; text-align:center; color:#5f7a8c;">
+        <div style="margin-top:18px; font-size:0.7rem; text-align:center; color:#64748b;">
             تاريخ الإصدار: ${formatDate(new Date())} · تطبق الشروط وفق سياسة كلينك شانزليزيه
         </div>
         <div style="margin-top:24px; display:flex; justify-content:space-around; font-size:0.75rem;">
@@ -1424,32 +1703,32 @@ async function exportReportPDF(fromStr, toStr) {
     pageDiv.innerHTML = `
         <div style="text-align:center; margin-bottom:8px;">
             <img src="https://i.postimg.cc/ZK4kBD7D/klynk.jpg" style="height:45px; border-radius:10px;">
-            <h2 style="color:#1e3a5f; margin:2px 0; font-size:1.1rem;">كلينك شانزليزيه</h2>
-            <p style="color:#2c6e2c; font-weight:bold; font-size:0.72rem; margin:0;">التقرير الدوري لإدارة أقساط الأجهزة</p>
+            <h2 style="color:#0d47a1; margin:2px 0; font-size:1.1rem;">كلينك شانزليزيه</h2>
+            <p style="color:#2e7d32; font-weight:bold; font-size:0.72rem; margin:0;">التقرير الدوري لإدارة أقساط الأجهزة</p>
             <hr style="margin:4px 0;">
             <h3 style="color:#0d47a1; margin:3px 0; font-size:0.95rem;">الفترة من ${formatDate(from)} إلى ${formatDate(to)}</h3>
         </div>
         <div style="display:flex; gap:6px; margin-bottom:8px; font-size:0.72rem;">
-            <div style="flex:1; background:#fef7e0; padding:6px; border-radius:6px; border-right:4px solid #b8860b;">
+            <div style="flex:1; background:#fff8e1; padding:6px; border-radius:6px; border-right:4px solid #ef6c00;">
                 <div style="color:#5a3e1b;">عقود جديدة: <strong>${contractsInPeriod.length}</strong></div>
                 <div style="color:#5a3e1b;">بقيمة: <strong>${formatMoney(totalContractsValue)} د.ك</strong></div>
             </div>
-            <div style="flex:1; background:#f0f9f0; padding:6px; border-radius:6px; border-right:4px solid #1b5e20;">
+            <div style="flex:1; background:#f0f9f0; padding:6px; border-radius:6px; border-right:4px solid #2e7d32;">
                 <div style="color:#155724;">دفعات مقدمة: <strong>${formatMoney(totalDownPayments)} د.ك</strong></div>
             </div>
-            <div style="flex:1; background:#eef5ff; padding:6px; border-radius:6px; border-right:4px solid #1976d2;">
+            <div style="flex:1; background:#e8f2ff; padding:6px; border-radius:6px; border-right:4px solid #1565c0;">
                 <div style="color:#0d47a1;">دفعات أقساط: <strong>${paymentsInPeriod.length}</strong></div>
                 <div style="color:#0d47a1;">بقيمة: <strong>${formatMoney(totalPaymentsValue)} د.ك</strong></div>
             </div>
         </div>
-        <h4 style="background:#1976d2; color:white; padding:3px; border-radius:5px; text-align:center; font-size:0.75rem; margin:4px 0;">العقود الجديدة</h4>
-        ${contractsInPeriod.length === 0 ? '<p style="font-size:0.72rem; text-align:center; color:#5d7a8c;">لا توجد عقود في هذه الفترة</p>' : `
+        <h4 style="background:#1565c0; color:white; padding:3px; border-radius:5px; text-align:center; font-size:0.75rem; margin:4px 0;">العقود الجديدة</h4>
+        ${contractsInPeriod.length === 0 ? '<p style="font-size:0.72rem; text-align:center; color:#64748b;">لا توجد عقود في هذه الفترة</p>' : `
         <table style="width:100%; border-collapse:collapse; font-size:0.68rem;">
             <thead><tr style="background:#0d47a1; color:white;">
                 <th style="padding:3px;">الجهاز</th><th style="padding:3px;">التاريخ</th><th style="padding:3px;">القيمة</th><th style="padding:3px;">مقدم</th><th style="padding:3px;">أقساط</th>
             </tr></thead>
             <tbody>${contractsRows}
-                <tr style="background:#eef2f7; font-weight:bold;">
+                <tr style="background:#f5f7fa; font-weight:bold;">
                     <td colspan="2" style="padding:3px;">الإجمالي</td>
                     <td style="padding:3px;">${formatMoney(totalContractsValue)}</td>
                     <td style="padding:3px;">${formatMoney(totalDownPayments)}</td>
@@ -1458,21 +1737,21 @@ async function exportReportPDF(fromStr, toStr) {
             </tbody>
         </table>`}
 
-        <h4 style="background:#1976d2; color:white; padding:3px; border-radius:5px; text-align:center; font-size:0.75rem; margin:6px 0 4px;">الدفعات المحصّلة</h4>
-        ${paymentsInPeriod.length === 0 ? '<p style="font-size:0.72rem; text-align:center; color:#5d7a8c;">لا توجد دفعات في هذه الفترة</p>' : `
+        <h4 style="background:#1565c0; color:white; padding:3px; border-radius:5px; text-align:center; font-size:0.75rem; margin:6px 0 4px;">الدفعات المحصّلة</h4>
+        ${paymentsInPeriod.length === 0 ? '<p style="font-size:0.72rem; text-align:center; color:#64748b;">لا توجد دفعات في هذه الفترة</p>' : `
         <table style="width:100%; border-collapse:collapse; font-size:0.68rem;">
             <thead><tr style="background:#0d47a1; color:white;">
                 <th style="padding:3px;">الجهاز</th><th style="padding:3px;">قسط #</th><th style="padding:3px;">الاستحقاق</th><th style="padding:3px;">الدفع</th><th style="padding:3px;">القيمة</th>
             </tr></thead>
             <tbody>${paymentsRows}
-                <tr style="background:#eef2f7; font-weight:bold;">
+                <tr style="background:#f5f7fa; font-weight:bold;">
                     <td colspan="4" style="padding:3px;">الإجمالي</td>
                     <td style="padding:3px;">${formatMoney(totalPaymentsValue)}</td>
                 </tr>
             </tbody>
         </table>`}
 
-        <div style="margin-top:14px; font-size:0.65rem; text-align:center; color:#5f7a8c;">
+        <div style="margin-top:14px; font-size:0.65rem; text-align:center; color:#64748b;">
             تاريخ الإصدار: ${formatDate(new Date())} · تطبق الشروط وفق سياسة كلينك شانزليزيه
         </div>
         <div style="margin-top:20px; display:flex; justify-content:space-around; font-size:0.7rem;">
@@ -1508,7 +1787,9 @@ function exportDataJSON() {
     a.download = `champs_elysees_backup_${formatDateInput(new Date())}.json`;
     a.click();
     URL.revokeObjectURL(url);
-    showToast('تم تصدير النسخة الاحتياطية', 'success');
+    showToast('تم تصدير النسخة الاحتياطية ✅', 'success');
+    // Reset reminder timer
+    startBackupTimer();
 }
 
 function importDataJSON(event) {
@@ -1521,9 +1802,10 @@ function importDataJSON(event) {
             if (!imported.devices || !Array.isArray(imported.devices)) throw new Error('صيغة غير صحيحة');
             if (!confirm('سيتم استبدال البيانات الحالية بالبيانات المستوردة. هل تريد المتابعة؟')) return;
             Data.save(imported);
-            showToast('تم استيراد البيانات بنجاح', 'success');
+            showToast('تم استيراد البيانات بنجاح ✅', 'success');
             renderDashboard();
             renderDevices();
+            document.querySelector('.tab[data-tab="dashboard"]').click();
         } catch (err) {
             showToast('ملف غير صالح', 'error');
         }
@@ -1536,48 +1818,13 @@ function importDataJSON(event) {
    INIT
    ============================================================ */
 function init() {
-    // Seed sample data if first run
-    let data = Data.load();
-    if (data.devices.length === 0) {
-        data.devices = [
-            {
-                id: generateId(),
-                deviceName: 'جهاز مراقبة المريض - Patient Monitor',
-                supplier: 'شركة الخليج للأجهزة الطبية',
-                contractNumber: 'DEV-2026-001',
-                contractDate: '2026-01-10',
-                totalPrice: 1500,
-                downPayment: 300,
-                installmentsCount: 12,
-                firstInstallmentDate: '2026-02-01',
-                notes: 'جهاز 5 بارامترات مع شاشة 15 بوصة',
-                payments: { 1: '2026-02-01', 2: '2026-03-02' },
-                createdAt: new Date().toISOString()
-            },
-            {
-                id: generateId(),
-                deviceName: 'جهاز تخطيط القلب - ECG Machine',
-                supplier: 'الشركة الكويتية للتقنيات الطبية',
-                contractNumber: 'DEV-2026-002',
-                contractDate: '2026-02-15',
-                totalPrice: 2400,
-                downPayment: 0,
-                installmentsCount: 20,
-                firstInstallmentDate: '2026-03-15',
-                notes: 'جهاز 12 قناة مع طابعة مدمجة',
-                payments: {},
-                createdAt: new Date().toISOString()
-            }
-        ];
-        Data.save(data);
-    }
-
     document.getElementById('currentYear').innerText = new Date().getFullYear();
     initAddFormDefaults();
     initReportDates();
     renderDashboard();
     renderDevices();
     renderStatementSearch();
+    startBackupTimer();
 }
 
 document.addEventListener('DOMContentLoaded', init);
